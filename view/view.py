@@ -2,9 +2,9 @@ from models.FlightsModel import FlightsModel
 
 class View:
 
-    def __init__(self):
+    def __init__(self, dbConnection):
         # construct all objects and declare all variables
-        self.flightsModel = FlightModel()
+        self.flightsModel = FlightsModel(dbConnection)
         pass
     
     # Public methods
@@ -14,8 +14,8 @@ class View:
         print("**********")
         print(" 1. Create table FlightInfo")
         print(" 2. Insert data into FlightInfo")
-        print(" 3. Select all data from FlightInfo")
-        print(" 4. Search for a flight")
+        print(" 3. Search for a flight")
+        print(" 4. Show all flights")
         print(" 5. Update data some records")
         print(" 6. Delete data some records")
         print(" 7. Exit\n")
@@ -50,7 +50,7 @@ class View:
     # Method to show all possible attributes for a table 
     def showAllAttributes(self, table):
 
-        print("Please type one of the following search criteria followed by a value")
+        print("Please type one of the following search criteria followed by a value\n")
 
         if table == "flights":
             print(self.flightsModel.possibleAttributes)

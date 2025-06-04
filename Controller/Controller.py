@@ -3,13 +3,13 @@ import sqlite3
 class Controller:
 
     # Connect to the database 
-    def __init__(self,view, dBSetUpModel, flightsModel, airportModel, pilotModel, aircraftModel):
+    def __init__(self,view, dBSetUpModel, flightsModel): #, airportModel, pilotModel, aircraftModel):
         self.view = view
         self.dBSetUpModel = dBSetUpModel
         self.flightsModel = flightsModel
-        self.airportModel = airportModel
-        self.pilotModel = pilotModel
-        self.aircraftModel = aircraftModel
+        # self.airportModel = airportModel
+        # self.pilotModel = pilotModel
+        # self.aircraftModel = aircraftModel
 
     def run(self):
         while True:
@@ -27,12 +27,12 @@ class Controller:
                 pass
             elif choice == 3:
                 self.view.showAllAttributes("flights")
-                flightsAttribute = self.view.getUserInput("Please type in the appropriate attribute to initiate search")
-                flightsAttributeValue = self.view.getUserInput("Please type in the value for the attribute")
+                flightsAttribute = self.view.getUserInput("Please type in the appropriate attribute to initiate search\n")
+                flightsAttributeValue = self.view.getUserInput("Please type in the value for the attribute\n")
                 self.flightsModel.retrieveFlightByAttribute(flightsAttribute, flightsAttributeValue)
                 pass
             elif choice == 4:
-                # Update flights
+                self.flightsModel.showAllFlights()
                 pass 
             elif choice == 5:
                 # Assign pilot to flight

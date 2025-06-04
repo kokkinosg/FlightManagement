@@ -9,6 +9,7 @@ class FlightsModel:
     def __init__(self, dbConnection):
         self.dbConnection = dbConnection
     
+    # Method to retrieve all flights which match certain search criteria.
     def retrieveFlightByAttribute(self, flightsAttribute, flightsAttributeValue):
         
         print("Retrieving all flights where " + flightsAttribute + " is " + str(flightsAttributeValue))
@@ -27,5 +28,14 @@ class FlightsModel:
                 print()
         else:
              print("Uknown attribute")
+    
+    # Method which retrieves all available flight records
+    def showAllFlights(self):
+        querry = '''SELECT * FROM flights'''
+        df = pd.read_sql_query(querry, self.dbConnection)
+        print(df)
+
+    def updateFlightInfo
+
 
     

@@ -6,24 +6,19 @@ from models.FlightsModel import FlightsModel
 from Controller.Controller import Controller
 
 def main():
+        
+    # Connect to the database. If there isn't one, it will create it. 
+    print ("Connecting to the database...")
+    dbConnection = sqlite3.connect("FlightManagementDB.db")
+    cursor = dbConnection.cursor()
+    print ("Connection successfull!")
 
-    try:
-        # Connect to the database. If there isn't one, it will create it. 
-        print ("Connecting to the database...")
-        dbConnection = sqlite3.connect("FlightManagementDB.db")
-        cursor = dbConnection.cursor()
-        print ("Connection successfull!")
+    view = View(dbConnection)
+    flightsModel = FlightsModel(dbConnection)
+    dbSetUpModel = DBSetUpModel(dbConnection,cursor)
+    controller = Controller(view, dbSetUpModel,flightsModel)
+    controller.run()
 
-        view = View()
-        flightsModel = FlightsModel()
-        dbSetUpModel = dbSetUpModel()
-        controller = Controller(view, dbSetUpModel,flightsModel)
-        controller.run()
-
-
-
-    except Exception as e:
-        print("Error during initialisation of DBOperations: ", e)
 
     
 
