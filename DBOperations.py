@@ -1,5 +1,4 @@
 import sqlite3
-import pandas as pd
 
 class DBOperations:
 
@@ -64,7 +63,7 @@ class DBOperations:
         # Pass the table creation SQL querries to the cursor and execute them. 
         self.cur.execute(sqlQuerry)
         # Commit the change
-        self.conn.commit()
+        self.dbConnection.commit()
         pass
 
     # SQL querry to create the flights table
@@ -131,7 +130,9 @@ class DBOperations:
     # Add sample data to each table
     def _add_sample_data_to_table(self, querriesArray):
         for querry in querriesArray:
-                self.cur.execute(querry)
+                self.cur.execute(querry())
+        self.dbConnection.commit()
+        pass
 
     # SQL querries to insert raw data
     def _create_raw_flight_data_querries(self):
