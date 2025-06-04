@@ -21,6 +21,14 @@ class View:
         print(" 7. Exit\n")
         pass
 
+    # Method which is called when we want to see results from a search
+    def showQuerryResults(self, df):
+        if df.empty:
+            print("No data were retrieved")
+        else:
+            print(df)
+    
+
     # Method to get a user menu selection
     def getMenuSelection(self):
         try:

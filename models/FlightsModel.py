@@ -20,12 +20,7 @@ class FlightsModel:
             querry = '''SELECT * FROM flights WHERE ''' + str(flightsAttribute) + " = " + str(flightsAttributeValue)
 
             df = pd.read_sql_query(querry, self.dbConnection)
-            if df.empty:
-                print("No flights exist in database where " + str(flightsAttribute) + " = " + str(flightsAttributeValue))
-            else:
-                print()
-                print(df)
-                print()
+            return df
         else:
              print("Uknown attribute")
     
@@ -33,9 +28,8 @@ class FlightsModel:
     def showAllFlights(self):
         querry = '''SELECT * FROM flights'''
         df = pd.read_sql_query(querry, self.dbConnection)
-        print(df)
+        return df
 
-    def updateFlightInfo
 
 
     
