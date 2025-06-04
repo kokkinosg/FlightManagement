@@ -1,4 +1,4 @@
-from models.FlightsModel import FlightModel
+from models.FlightsModel import FlightsModel
 
 class View:
 

@@ -15,8 +15,9 @@ def main():
         print ("Connection successfull!")
 
         view = View()
-        controller = Controller()
-
+        flightsModel = FlightsModel()
+        dbSetUpModel = dbSetUpModel()
+        controller = Controller(view, dbSetUpModel,flightsModel)
         controller.run()
 
 

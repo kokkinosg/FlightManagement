@@ -6,18 +6,15 @@ class DBSetUpModel:
     # Constructor
     # Class attributes are created here.
     # Upon instantiation of this class, it connects to the database and creates the tables if they do not already exist. 
-    def __init__(self):
+    def __init__(self, dbConnection, cursor ):
         try:
-            
-            # Connect to the database. If there isn't one, it will create it. 
-            
-            print ("Connecting to the database...")
-            self.dbConnection = sqlite3.connect("FlightManagementDB.db")
-            self.cur = self.dbConnection.cursor()
-            print ("Connection successfull!")
+            self.dbConnection = dbConnection
+            self.cur = cursor
+        except Exception as e:
+            print("Error during initialisation of DBSetUpModel: ", e)
 
-            # Create all tables
-
+    def createAllTables(self):
+        try:
             print("Creating tables...")
             self._create_table(self._create_flights_table_querry())
             self._create_table(self._create_airport_table_querry())
@@ -25,9 +22,11 @@ class DBSetUpModel:
             self._create_table(self._create_pilot_table_querry())
 
             print("Tables created successfully!")
-
-            # Add sample data to each table
-
+        except Exception as e:
+            print("Error in creating all tables: " + str(e))
+    
+    def addAllSampleData(self):
+        try:
             print("Adding sample data to the database...")
 
             self._add_sample_data_to_table(self._create_raw_aircraft_data_querries())
@@ -43,9 +42,9 @@ class DBSetUpModel:
             print ("Sample airport data added successfully.")
 
             print("All sample data added succesfully!")
-
         except Exception as e:
-            print("Error during initialisation of DBOperations: ", e)
+            print("Error in populating all tables with sample data: " + str(e))
+
 
     # Close connection to the database
     def close(self):

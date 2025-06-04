@@ -3,7 +3,7 @@ import sqlite3
 class Controller:
 
     # Connect to the database 
-    def __init__(self,dBSetUpModel, flightsModel, airportModel, pilotModel, aircraftModel, view):
+    def __init__(self,view, dBSetUpModel, flightsModel, airportModel, pilotModel, aircraftModel):
         self.view = view
         self.dBSetUpModel = dBSetUpModel
         self.flightsModel = flightsModel
