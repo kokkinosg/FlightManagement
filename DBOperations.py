@@ -1,0 +1,386 @@
+import sqlite3
+import pandas as pd
+
+class DBOperations:
+
+    # Constructor
+    # Class attributes are created here.
+    # Upon instantiation of this class, it connects to the database and creates the tables if they do not already exist. 
+    def __init__(self):
+        try:
+            
+            # Connect to the database. If there isn't one, it will create it. 
+            
+            print ("Connecting to the database...")
+            self.dbConnection = sqlite3.connect("FlightManagementDB.db")
+            self.cur = self.dbConnection.cursor()
+            print ("Connection successfull!")
+
+            # Create all tables
+
+            print("Creating tables...")
+            self._create_table(self._create_flights_table_querry)
+            self._create_table(self._create_airport_table_querry)
+            self._create_table(self._create_aircraft_table_querry)
+            self._create_table(self._create_pilot_table_querry)
+
+            print("Tables created successfully!")
+
+            # Add sample data to each table
+
+            print("Adding sample data to the database...")
+
+            self._add_sample_data_to_table(self._create_raw_aircraft_data_querries)
+            print ("Sample aircraft data added successfully.")
+
+            self._add_sample_data_to_table(self._create_raw_flight_data_querries)
+            print ("Sample flight data added successfully.")
+
+            self._add_sample_data_to_table(self._create_raw_pilot_data_querries)
+            print ("Sample pilot data added successfully.")
+
+            self._add_sample_data_to_table(self._create_raw_airport_data_querries)
+            print ("Sample airport data added successfully.")
+
+            print("All sample data added succesfully!")
+
+        except Exception as e:
+            print("Error during initialisation of DBOperations: " + e)
+
+
+    # Public methods
+
+    # Close connection to the database
+    def close(self):
+        try: 
+            self.dbConnection.close()
+            print("Connection closed succesffully!")
+        except Exception as e:
+            print("Error whilst attempting to close the connection: " + e)
+
+    # Private methods
+    # This method creates all the necessary tables if they do not exist. It is called in the constructor. 
+    def _create_table(self, sqlQuerry):
+        # Pass the table creation SQL querries to the cursor and execute them. 
+        self.cur.execute(sqlQuerry)
+        # Commit the change
+        self.conn.commit()
+        pass
+
+    # SQL querry to create the flights table
+    def _create_flights_table_querry(self):
+        sqlQuerry = '''CREATE TABLE IF NOT EXISTS flights (
+            flightID INTEGER PRIMARY KEY AUTOINCREMENT,
+            aircraftID INTEGER NOT NULL,
+            pilotID INTEGER NOT NULL,
+            fromDestinationID INTEGER NOT NULL,
+            toDestinationID INTEGER NOT NULL,
+            departTime DATETIME NOT NULL,
+            arrivalTime DATETIME NOT NULL,
+            passengerCount INTEGER NOT NULL,
+            travelDistanceKM FLOAT NOT NULL CHECK (travelDistanceKM>0),
+            status TEXT CHECK(status IN ('As planned', 'Delayed', 'Cancelled')),
+            FOREIGN KEY (aircraftID) REFERENCES aircraft(aircraftID),
+            FOREIGN KEY (pilotID) REFERENCES pilot(pilotID),
+            FOREIGN KEY (fromDestinationID) REFERENCES airport(airportID),
+            FOREIGN KEY (toDestinationID) REFERENCES airport(airportID)
+            );'''
+        return sqlQuerry
+    
+    # SQL querry to create the airport table
+    def _create_airport_table_querry(self):
+        sqlQuerry = '''CREATE TABLE IF NOT EXISTS airport (
+            airportID INTEGER PRIMARY KEY AUTOINCREMENT,
+            airportName TEXT NOT NULL,
+            city TEXT,
+            country TEXT,
+            postCode TEXT NOT NULL
+            );'''
+        return sqlQuerry
+    
+    # SQL querry to create the pilot table
+    def _create_pilot_table_querry(self):
+        sqlQuerry = '''CREATE TABLE IF NOT EXISTS pilot (
+            pilotID INTEGER PRIMARY KEY AUTOINCREMENT,
+            pilotName TEXT NOT NULL,
+            pilotSurname TEXT NOT NULL,
+            gender TEXT CHECK (gender IN ('Male', 'Female')),
+            licenseNumber TEXT UNIQUE NOT NULL,
+            experienceYears INTEGER,
+            aircraftID INTEGER NOT NULL,
+            currentLocationID INTEGER NOT NULL,
+            FOREIGN KEY (aircraftID) REFERENCES aircraft(aircraftID),
+            FOREIGN KEY (currentLocationID) REFERENCES airport(airportID)
+            );'''
+        return sqlQuerry
+    
+    # SQL querry to create the aircraft table
+    def _create_aircraft_table_querry(self):
+        sqlQuerry ='''CREATE TABLE IF NOT EXISTS aircraft (
+            aircraftID INTEGER PRIMARY KEY AUTOINCREMENT,
+            model TEXT NOT NULL,
+            airline TEXT NOT NULL,
+            manufacturer TEXT,
+            capacity INTEGER CHECK (capacity > 0),
+            rangeKM FLOAT CHECK (rangeKM > 0),
+            currentLocationID INTEGER NOT NULL,
+            FOREIGN KEY (currentLocationID) REFERENCES airport(airportID)
+            );'''
+        return sqlQuerry
+    
+    # Add sample data to each table
+    def _add_sample_data_to_table(self, querriesArray):
+        for querry in querriesArray:
+                self.cur.execute(querry)
+
+    # SQL querries to insert raw data
+    def _create_raw_flight_data_querries(self):
+        sqlQuerries = [
+            '''INSERT INTO flights (
+                aircraftID, pilotID, fromDestinationID, toDestinationID,
+                departTime, arrivalTime, passengerCount, travelDistanceKM, status
+            ) VALUES
+            (1, 1, 101, 102, '2025-06-01 08:30:00', '2025-06-01 10:45:00', 120, 950.5, 'As planned');''',
+
+            '''INSERT INTO flights (
+                aircraftID, pilotID, fromDestinationID, toDestinationID,
+                departTime, arrivalTime, passengerCount, travelDistanceKM, status
+            ) VALUES
+            (2, 2, 102, 103, '2025-06-02 14:00:00', '2025-06-02 16:20:00', 95, 780.0, 'Delayed');''',
+
+            '''INSERT INTO flights (
+                aircraftID, pilotID, fromDestinationID, toDestinationID,
+                departTime, arrivalTime, passengerCount, travelDistanceKM, status
+            ) VALUES
+            (3, 1, 101, 104, '2025-06-03 09:00:00', '2025-06-03 12:30:00', 135, 1120.2, 'As planned');''',
+
+            '''INSERT INTO flights (
+                aircraftID, pilotID, fromDestinationID, toDestinationID,
+                departTime, arrivalTime, passengerCount, travelDistanceKM, status
+            ) VALUES
+            (4, 3, 103, 105, '2025-06-04 06:15:00', '2025-06-04 08:00:00', 85, 620.4, 'Cancelled');''',
+
+            '''INSERT INTO flights (
+                aircraftID, pilotID, fromDestinationID, toDestinationID,
+                departTime, arrivalTime, passengerCount, travelDistanceKM, status
+            ) VALUES
+            (2, 4, 104, 101, '2025-06-05 18:45:00', '2025-06-05 21:10:00', 100, 860.0, 'Delayed');'''
+        ]
+        return sqlQuerries
+    
+    def _create_raw_pilot_data_querries(self):
+        sqlQuerries = [
+            '''INSERT INTO pilot (
+                pilotID, pilotName, pilotSurname, gender, licenseNumber,
+                experienceYears, aircraftID, currentLocationID
+            ) VALUES
+            (1, 'John', 'Smith', 'Male', 'LIC1234', 12, 1, 101);''',
+
+            '''INSERT INTO pilot (
+                pilotID, pilotName, pilotSurname, gender, licenseNumber,
+                experienceYears, aircraftID, currentLocationID
+            ) VALUES
+            (2, 'Maria', 'Lopez', 'Female', 'LIC2345', 9, 2, 102);''',
+
+            '''INSERT INTO pilot (
+                pilotID, pilotName, pilotSurname, gender, licenseNumber,
+                experienceYears, aircraftID, currentLocationID
+            ) VALUES
+            (3, 'Ahmed', 'Khan', 'Male', 'LIC3456', 15, 4, 103);''',
+
+            '''INSERT INTO pilot (
+                pilotID, pilotName, pilotSurname, gender, licenseNumber,
+                experienceYears, aircraftID, currentLocationID
+            ) VALUES
+            (4, 'Elena', 'Rossi', 'Female', 'LIC4567', 7, 2, 104);''',
+
+            '''INSERT INTO pilot (
+                pilotID, pilotName, pilotSurname, gender, licenseNumber,
+                experienceYears, aircraftID, currentLocationID
+            ) VALUES
+            (5, 'Rudolph', 'Rednose', 'Male', 'LIC4583', 8, 4, 105);'''
+        ]
+        return sqlQuerries
+    
+    def _create_raw_aircraft_data_querries(self):
+        sqlQuerries = [
+            '''INSERT INTO aircraft (
+                aircraftID, model, airline, manufacturer,
+                capacity, rangeKM, currentLocationID
+            ) VALUES
+            (1, 'A320', 'British Airways', 'Airbus', 180, 6100.0, 101);''',
+
+            '''INSERT INTO aircraft (
+                aircraftID, model, airline, manufacturer,
+                capacity, rangeKM, currentLocationID
+            ) VALUES
+            (2, '737 MAX', 'Ryanair', 'Boeing', 200, 6500.0, 102);''',
+
+            '''INSERT INTO aircraft (
+                aircraftID, model, airline, manufacturer,
+                capacity, rangeKM, currentLocationID
+            ) VALUES
+            (3, 'A330', 'Lufthansa', 'Airbus', 250, 11750.0, 104);''',
+
+            '''INSERT INTO aircraft (
+                aircraftID, model, airline, manufacturer,
+                capacity, rangeKM, currentLocationID
+            ) VALUES
+            (4, '787 Dreamliner', 'Alitalia', 'Boeing', 296, 13620.0, 103);'''
+        ]
+        return sqlQuerries
+    
+    def _create_raw_airport_data_querries(self):
+        sqlQuerries = [
+            '''INSERT INTO airport (
+                airportID, airportName, city, country, postCode
+            ) VALUES
+            (101, 'Heathrow Airport', 'London', 'UK', 'TW6 1EW');''',
+
+            '''INSERT INTO airport (
+                airportID, airportName, city, country, postCode
+            ) VALUES
+            (102, 'Charles de Gaulle Airport', 'Paris', 'France', '95700');''',
+
+            '''INSERT INTO airport (
+                airportID, airportName, city, country, postCode
+            ) VALUES
+            (103, 'Frankfurt Airport', 'Frankfurt', 'Germany', '60547');''',
+
+            '''INSERT INTO airport (
+                airportID, airportName, city, country, postCode
+            ) VALUES
+            (104, 'Madrid Barajas Airport', 'Madrid', 'Spain', '28042');''',
+
+            '''INSERT INTO airport (
+                airportID, airportName, city, country, postCode
+            ) VALUES
+            (105, 'Leonardo da Vinci Airport', 'Rome', 'Italy', '00054');'''
+        ]
+        return sqlQuerries
+    
+
+                
+                
+
+
+
+
+
+
+
+
+
+
+    # sql_create_table_firsttime = "create table if not exists "
+
+    # sql_create_table = "create table TableName"
+
+    # sql_insert = ""
+    # sql_select_all = "select * from TableName"
+    # sql_search = "select * from TableName where FlightID = ?"
+    # sql_alter_data = ""
+    # sql_update_data = ""
+    # sql_delete_data = ""
+    # sql_drop_table = ""
+
+    # def get_connection(self):
+    #     self.conn = sqlite3.connect("DBName.db")
+    #     self.cur = self.conn.cursor()
+
+    # def create_table(self):
+    #     try:
+    #         self.get_connection()
+    #         self.cur.execute(self.sql_create_table)
+    #         self.conn.commit()
+    #         print("Table created successfully")
+    #     except Exception as e:
+    #         print(e)
+    #     finally:
+    #         self.conn.close()
+
+    # def insert_data(self):
+    #     try:
+    #         self.get_connection()
+
+    #         flight = FlightInfo()
+    #         flight.set_flight_id(int(input("Enter FlightID: ")))
+
+    #         self.cur.execute(self.sql_insert, tuple(str(flight).split("\n")))
+
+    #         self.conn.commit()
+    #         print("Inserted data successfully")
+    #     except Exception as e:
+    #         print(e)
+    #     finally:
+    #         self.conn.close()
+
+    # def select_all(self):
+    #     try:
+    #         self.get_connection()
+    #         self.cur.execute(self.sql_select_all)
+    #         result = self.cur.fetchall()
+
+    #         # think how you could develop this method to show the records
+
+    #     except Exception as e:
+    #         print(e)
+    #     finally:
+    #         self.conn.close()
+
+    # def search_data(self):
+    #     try:
+    #         self.get_connection()
+    #         flightID = int(input("Enter FlightNo: "))
+    #         self.cur.execute(self.sql_search, tuple(str(flightID)))
+    #         result = self.cur.fetchone()
+    #         if type(result) == type(tuple()):
+    #             for index, detail in enumerate(result):
+    #                 if index == 0:
+    #                 print("Flight ID: " + str(detail))
+    #                 elif index == 1:
+    #                 print("Flight Origin: " + detail)
+    #                 elif index == 2:
+    #                 print("Flight Destination: " + detail)
+    #                 else:
+    #                 print("Status: " + str(detail))
+    #         else:
+    #             print("No Record")
+
+    #     except Exception as e:
+    #         print(e)
+    #     finally:
+    #         self.conn.close()
+
+    # def update_data(self):
+    #     try:
+    #         self.get_connection()
+
+    #         # Update statement
+
+    #         if result.rowcount != 0:
+    #             print(str(result.rowcount) + "Row(s) affected.")
+    #         else:
+    #             print("Cannot find this record in the database")
+
+    #     except Exception as e:
+    #         print(e)
+    #     finally:
+    #         self.conn.close()
+
+
+    # # Define Delete_data method to delete data from the table. The user will need to input the flight id to delete the corrosponding record.
+
+    # def delete_data(self):
+    #     try:
+    #         self.get_connection()
+
+    #         if result.rowcount != 0:
+    #             print(str(result.rowcount) + "Row(s) affected.")
+    #         else:
+    #             print("Cannot find this record in the database")
+
+    #     except Exception as e:
+    #         print(e)
+    #     finally:
+    #         self.conn.close()
