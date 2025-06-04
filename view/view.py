@@ -18,7 +18,7 @@ class View:
         print(" 4. Show all flights")
         print(" 5. Update data some records")
         print(" 6. Delete data some records")
-        print(" 7. Exit\n")
+        print(" 8. Exit\n")
         pass
 
     # Method which is called when we want to see results from a search
@@ -33,7 +33,7 @@ class View:
     def getMenuSelection(self):
         try:
             userChoice = int(input("Please choose an option: "))
-            if 1 <= userChoice <= 7:
+            if 1 <= userChoice <= 8:
                 return userChoice
             else:
                 print("Invalid choice. Please enter a number between 1 and 7.")

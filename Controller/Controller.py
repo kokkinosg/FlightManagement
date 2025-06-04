@@ -26,14 +26,9 @@ class Controller:
                 # Add flight
                 pass
             elif choice == 3:
-                self.view.showAllAttributes("flights")
-                flightsAttribute = self.view.getUserInput("Please type in the appropriate attribute to initiate search\n")
-                flightsAttributeValue = self.view.getUserInput("Please type in the value for the attribute\n")
-                self.flightsModel.retrieveFlightByAttribute(flightsAttribute, flightsAttributeValue)
-                pass
+                self._option3()
             elif choice == 4:
-                self.flightsModel.showAllFlights()
-                pass 
+                self._option4()
             elif choice == 5:
                 # Assign pilot to flight
                 pass
@@ -48,6 +43,24 @@ class Controller:
                 break
             else:
                 self.view.showMessage("Invalid selection. Try again...")
+    
+   
+    # Local methods
+    def _option3(self):
+        self.view.showAllAttributes("flights")
+        flightsAttribute = self.view.getUserInput("Please type in the appropriate attribute to initiate search\n")
+        flightsAttributeValue = self.view.getUserInput("Please type in the value for the attribute\n")
+        df = self.flightsModel.retrieveFlightByAttribute(flightsAttribute, flightsAttributeValue)
+        self.view.showQuerryResults(df)
+        self.view.getUserInput("\nPress any button to continue...")
+    
+    def _option4(self):
+        df = self.flightsModel.showAllFlights()
+        self.view.showQuerryResults(df)
+        self.view.getUserInput("\nPress any button to continue...")
+
+
+
 
 
 
