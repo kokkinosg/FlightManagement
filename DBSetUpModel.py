@@ -1,6 +1,7 @@
 import sqlite3
 
-class DBOperations:
+# This class is for creating the tables and populating them with sample data. 
+class DBSetUpModel:
 
     # Constructor
     # Class attributes are created here.
@@ -45,9 +46,6 @@ class DBOperations:
 
         except Exception as e:
             print("Error during initialisation of DBOperations: ", e)
-
-    # Public methods
-
 
     # Close connection to the database
     def close(self):
@@ -138,64 +136,64 @@ class DBOperations:
     def _create_raw_flight_data_querries(self):
         sqlQuerries = [
             '''INSERT OR IGNORE INTO flights (
-                aircraftID, pilotID, fromDestinationID, toDestinationID,
+                flightID, aircraftID, pilotID, fromDestinationID, toDestinationID,
                 departTime, arrivalTime, passengerCount, travelDistanceKM, status
             ) VALUES
-            (1, 1, 101, 102, '2025-06-01 08:30:00', '2025-06-01 10:45:00', 120, 950.5, 'As planned');''',
+            (1, 1, 1, 101, 102, '2025-06-01 08:30:00', '2025-06-01 10:45:00', 120, 950.5, 'As planned');''',
 
             '''INSERT OR IGNORE INTO flights (
-                aircraftID, pilotID, fromDestinationID, toDestinationID,
+                flightID, aircraftID, pilotID, fromDestinationID, toDestinationID,
                 departTime, arrivalTime, passengerCount, travelDistanceKM, status
             ) VALUES
-            (2, 2, 102, 103, '2025-06-02 14:00:00', '2025-06-02 16:20:00', 95, 780.0, 'Delayed');''',
+            (2, 2, 2, 102, 103, '2025-06-02 14:00:00', '2025-06-02 16:20:00', 95, 780.0, 'Delayed');''',
 
             '''INSERT OR IGNORE INTO flights (
-                aircraftID, pilotID, fromDestinationID, toDestinationID,
+                flightID, aircraftID, pilotID, fromDestinationID, toDestinationID,
                 departTime, arrivalTime, passengerCount, travelDistanceKM, status
             ) VALUES
-            (3, 1, 101, 104, '2025-06-03 09:00:00', '2025-06-03 12:30:00', 135, 1120.2, 'As planned');''',
+            (3, 3, 1, 101, 104, '2025-06-03 09:00:00', '2025-06-03 12:30:00', 135, 1120.2, 'As planned');''',
 
             '''INSERT OR IGNORE INTO flights (
-                aircraftID, pilotID, fromDestinationID, toDestinationID,
+                flightID, aircraftID, pilotID, fromDestinationID, toDestinationID,
                 departTime, arrivalTime, passengerCount, travelDistanceKM, status
             ) VALUES
-            (4, 3, 103, 105, '2025-06-04 06:15:00', '2025-06-04 08:00:00', 85, 620.4, 'Cancelled');''',
+            (4, 4, 3, 103, 105, '2025-06-04 06:15:00', '2025-06-04 08:00:00', 85, 620.4, 'Cancelled');''',
 
             '''INSERT OR IGNORE INTO flights (
-                aircraftID, pilotID, fromDestinationID, toDestinationID,
+                flightID, aircraftID, pilotID, fromDestinationID, toDestinationID,
                 departTime, arrivalTime, passengerCount, travelDistanceKM, status
             ) VALUES
-            (2, 4, 104, 101, '2025-06-05 18:45:00', '2025-06-05 21:10:00', 100, 860.0, 'Delayed');''',
+            (5, 2, 4, 104, 101, '2025-06-05 18:45:00', '2025-06-05 21:10:00', 100, 860.0, 'Delayed');''',
 
             '''INSERT OR IGNORE INTO flights (
-                aircraftID, pilotID, fromDestinationID, toDestinationID,
+                flightID, aircraftID, pilotID, fromDestinationID, toDestinationID,
                 departTime, arrivalTime, passengerCount, travelDistanceKM, status
             ) VALUES
-            (5, 5, 105, 101, '2025-06-06 07:00:00', '2025-06-06 09:15:00', 110, 970.3, 'As planned');''',
+            (6, 5, 5, 105, 101, '2025-06-06 07:00:00', '2025-06-06 09:15:00', 110, 970.3, 'As planned');''',
 
             '''INSERT OR IGNORE INTO flights (
-                aircraftID, pilotID, fromDestinationID, toDestinationID,
+                flightID, aircraftID, pilotID, fromDestinationID, toDestinationID,
                 departTime, arrivalTime, passengerCount, travelDistanceKM, status
             ) VALUES
-            (1, 2, 101, 103, '2025-06-07 13:30:00', '2025-06-07 15:50:00', 88, 890.0, 'Delayed');''',
+            (7, 1, 2, 101, 103, '2025-06-07 13:30:00', '2025-06-07 15:50:00', 88, 890.0, 'Delayed');''',
 
             '''INSERT OR IGNORE INTO flights (
-                aircraftID, pilotID, fromDestinationID, toDestinationID,
+                flightID, aircraftID, pilotID, fromDestinationID, toDestinationID,
                 departTime, arrivalTime, passengerCount, travelDistanceKM, status
             ) VALUES
-            (2, 3, 102, 104, '2025-06-08 10:00:00', '2025-06-08 12:25:00', 140, 990.8, 'Cancelled');''',
+            (8, 2, 3, 102, 104, '2025-06-08 10:00:00', '2025-06-08 12:25:00', 140, 990.8, 'Cancelled');''',
 
             '''INSERT OR IGNORE INTO flights (
-                aircraftID, pilotID, fromDestinationID, toDestinationID,
+                flightID, aircraftID, pilotID, fromDestinationID, toDestinationID,
                 departTime, arrivalTime, passengerCount, travelDistanceKM, status
             ) VALUES
-            (3, 4, 103, 105, '2025-06-09 16:00:00', '2025-06-09 18:30:00', 160, 1025.1, 'As planned');''',
+            (9, 3, 4, 103, 105, '2025-06-09 16:00:00', '2025-06-09 18:30:00', 160, 1025.1, 'As planned');''',
 
             '''INSERT OR IGNORE INTO flights (
-                aircraftID, pilotID, fromDestinationID, toDestinationID,
+                flightID, aircraftID, pilotID, fromDestinationID, toDestinationID,
                 departTime, arrivalTime, passengerCount, travelDistanceKM, status
             ) VALUES
-            (4, 5, 104, 102, '2025-06-10 19:45:00', '2025-06-10 22:10:00', 105, 865.7, 'Delayed');''',
+            (10, 4, 5, 104, 102, '2025-06-10 19:45:00', '2025-06-10 22:10:00', 105, 865.7, 'Delayed');''',
         ]
         return sqlQuerries
     
@@ -381,128 +379,3 @@ class DBOperations:
         ]
         return sqlQuerries
     
-
-                
-                
-
-
-
-
-
-
-
-
-
-
-    # sql_create_table_firsttime = "create table if not exists "
-
-    # sql_create_table = "create table TableName"
-
-    # sql_insert = ""
-    # sql_select_all = "select * from TableName"
-    # sql_search = "select * from TableName where FlightID = ?"
-    # sql_alter_data = ""
-    # sql_update_data = ""
-    # sql_delete_data = ""
-    # sql_drop_table = ""
-
-    # def get_connection(self):
-    #     self.conn = sqlite3.connect("DBName.db")
-    #     self.cur = self.conn.cursor()
-
-    # def create_table(self):
-    #     try:
-    #         self.get_connection()
-    #         self.cur.execute(self.sql_create_table)
-    #         self.conn.commit()
-    #         print("Table created successfully")
-    #     except Exception as e:
-    #         print(e)
-    #     finally:
-    #         self.conn.close()
-
-    # def insert_data(self):
-    #     try:
-    #         self.get_connection()
-
-    #         flight = FlightInfo()
-    #         flight.set_flight_id(int(input("Enter FlightID: ")))
-
-    #         self.cur.execute(self.sql_insert, tuple(str(flight).split("\n")))
-
-    #         self.conn.commit()
-    #         print("Inserted data successfully")
-    #     except Exception as e:
-    #         print(e)
-    #     finally:
-    #         self.conn.close()
-
-    # def select_all(self):
-    #     try:
-    #         self.get_connection()
-    #         self.cur.execute(self.sql_select_all)
-    #         result = self.cur.fetchall()
-
-    #         # think how you could develop this method to show the records
-
-    #     except Exception as e:
-    #         print(e)
-    #     finally:
-    #         self.conn.close()
-
-    # def search_data(self):
-    #     try:
-    #         self.get_connection()
-    #         flightID = int(input("Enter FlightNo: "))
-    #         self.cur.execute(self.sql_search, tuple(str(flightID)))
-    #         result = self.cur.fetchone()
-    #         if type(result) == type(tuple()):
-    #             for index, detail in enumerate(result):
-    #                 if index == 0:
-    #                 print("Flight ID: " + str(detail))
-    #                 elif index == 1:
-    #                 print("Flight Origin: " + detail)
-    #                 elif index == 2:
-    #                 print("Flight Destination: " + detail)
-    #                 else:
-    #                 print("Status: " + str(detail))
-    #         else:
-    #             print("No Record")
-
-    #     except Exception as e:
-    #         print(e)
-    #     finally:
-    #         self.conn.close()
-
-    # def update_data(self):
-    #     try:
-    #         self.get_connection()
-
-    #         # Update statement
-
-    #         if result.rowcount != 0:
-    #             print(str(result.rowcount) + "Row(s) affected.")
-    #         else:
-    #             print("Cannot find this record in the database")
-
-    #     except Exception as e:
-    #         print(e)
-    #     finally:
-    #         self.conn.close()
-
-
-    # # Define Delete_data method to delete data from the table. The user will need to input the flight id to delete the corrosponding record.
-
-    # def delete_data(self):
-    #     try:
-    #         self.get_connection()
-
-    #         if result.rowcount != 0:
-    #             print(str(result.rowcount) + "Row(s) affected.")
-    #         else:
-    #             print("Cannot find this record in the database")
-
-    #     except Exception as e:
-    #         print(e)
-    #     finally:
-    #         self.conn.close()
