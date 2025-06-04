@@ -1,0 +1,57 @@
+import sqlite3
+
+class Controller:
+
+    # Connect to the database 
+    def __init__(self,dBSetUpModel, flightsModel, airportModel, pilotModel, aircraftModel, view):
+        self.view = view
+        self.dBSetUpModel = dBSetUpModel
+        self.flightsModel = flightsModel
+        self.airportModel = airportModel
+        self.pilotModel = pilotModel
+        self.aircraftModel = aircraftModel
+
+    def run(self):
+        while True:
+
+            #  Display the menu
+            self.view.displayMenu()
+            # Get the user choice
+            choice  = self.view.getMenuSelection()
+
+            if choice == 1:
+                # Create flight tables
+                pass
+            elif choice == 2:
+                # Add flight
+                pass
+            elif choice == 3:
+                self.view.showAllAttributes("flights")
+                flightsAttribute = self.view.getUserInput("Please type in the appropriate attribute to initiate search")
+                flightsAttributeValue = self.view.getUserInput("Please type in the value for the attribute")
+                self.flightsModel.retrieveFlightByAttribute(flightsAttribute, flightsAttributeValue)
+                pass
+            elif choice == 4:
+                # Update flights
+                pass 
+            elif choice == 5:
+                # Assign pilot to flight
+                pass
+            elif choice == 6:
+                # View destination  information
+                pass
+            elif choice == 7:
+                # Update Destination information
+                pass
+            elif choice == 8:
+                #Close connection and exit
+                break
+            else:
+                self.view.showMessage("Invalid selection. Try again...")
+
+
+
+
+            
+
+
