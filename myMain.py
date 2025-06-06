@@ -4,6 +4,7 @@ from models.DBSetUpModel import DBSetUpModel
 from view.view import View
 from models.FlightsModel import FlightsModel
 from Controller.Controller import Controller
+from models.PilotModel import PilotModel
 
 def main():
         
@@ -15,8 +16,9 @@ def main():
 
     view = View(dbConnection)
     flightsModel = FlightsModel(dbConnection)
+    pilotModel = PilotModel(dbConnection)
     dbSetUpModel = DBSetUpModel(dbConnection,cursor)
-    controller = Controller(view, dbSetUpModel,flightsModel)
+    controller = Controller(view, dbSetUpModel,flightsModel, pilotModel)
     controller.run()
 
 

@@ -3,12 +3,12 @@ import sqlite3
 class Controller:
 
     # Connect to the database 
-    def __init__(self,view, dBSetUpModel, flightsModel): #, airportModel, pilotModel, aircraftModel):
+    def __init__(self,view, dBSetUpModel, flightsModel, pilotModel): #, airportModel, pilotModel, aircraftModel):
         self.view = view
         self.dBSetUpModel = dBSetUpModel
         self.flightsModel = flightsModel
         # self.airportModel = airportModel
-        # self.pilotModel = pilotModel
+        self.pilotModel = pilotModel
         # self.aircraftModel = aircraftModel
 
     def run(self):
@@ -36,8 +36,7 @@ class Controller:
                 # View destination  information
                 pass
             elif choice == 7:
-                # Update Destination information
-                pass
+                self._option7()
             elif choice == 8:
                 #Close connection and exit
                 break
@@ -58,6 +57,11 @@ class Controller:
         df = self.flightsModel.showAllFlights()
         self.view.showQuerryResults(df)
         self.view.getUserInput("\nPress any button to continue...")
+    
+    def _option7(self):
+        df = self.pilotModel.getAllPilotsSchedule()
+        self.view.showQuerryResults(df)
+        self.view.getUserInput(("\nPress any button to continue..."))
 
 
 

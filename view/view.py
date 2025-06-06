@@ -18,7 +18,8 @@ class View:
         print(" 4. Show all flights")
         print(" 5. Update data some records")
         print(" 6. Delete data some records")
-        print(" 8. Exit\n")
+        print(" 7. Show all pilots' schedule")
+        print(" 8. Exit\n") 
         pass
 
     # Method which is called when we want to see results from a search
@@ -36,7 +37,7 @@ class View:
             if 1 <= userChoice <= 8:
                 return userChoice
             else:
-                print("Invalid choice. Please enter a number between 1 and 7.")
+                print("Invalid choice. Please enter a number between 1 and 8.")
                 return -1
         except ValueError:
             print("Invalid input. Please enter a number.")
