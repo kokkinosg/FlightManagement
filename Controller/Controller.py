@@ -36,8 +36,11 @@ class Controller:
                 # View destination  information
                 pass
             elif choice == 7:
-                self._option7()
+                # self._option7()
+                pass
             elif choice == 8:
+                self._option8()
+            elif choice == 9:
                 #Close connection and exit
                 break
             else:
@@ -58,10 +61,29 @@ class Controller:
         self.view.showQuerryResults(df)
         self.view.getUserInput("\nPress any button to continue...")
     
-    def _option7(self):
-        df = self.pilotModel.getAllPilotsSchedule()
+    # def _option7(self):
+    #     df = self.pilotModel.getAllPilotsSchedule()
+    #     self.view.showQuerryResults(df)
+    #     self.view.getUserInput(("\nPress any button to continue..."))
+
+    def _option8(self):
+        # Array to contain all license numbers 
+        lisenceNumbers = []
+
+        # Get the first license number 
+        lisenceNumber = self.view.getUserInput("Please type in the pilot's license number or press enter to display results\n")
+
+        # Get additional license Numbers until the user presses enter which will provide an empty string
+        while lisenceNumber != "":
+            lisenceNumbers.append(lisenceNumber)
+            lisenceNumber = self.view.getUserInput("Please type in the pilot's license number or press enter to display results\n")
+
+
+        df = self.pilotModel.getMultiplePilotsSchedule(lisenceNumbers)
         self.view.showQuerryResults(df)
-        self.view.getUserInput(("\nPress any button to continue..."))
+
+
+
 
 
 
