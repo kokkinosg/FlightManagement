@@ -24,14 +24,17 @@ class PilotModel:
 
         querry = '''SELECT p.pilotName AS Name, p.pilotSurname AS Surname, p.licenseNumber AS "Licence Number", dep.airportName AS "Current Location", arr.airportName AS "Flies to",
         f.departTime AS "Departure Time", f.arrivalTime AS "Arrival Time", a.airline 
-        FROM aircraft a, airport dep, airport arr, flights f, pilot p
-        WHERE f.aircraftID =  a.aircraftID AND f.pilotID = p.pilotID AND f.toDestinationID= dep.airportID AND f.fromDestinationID = arr.airportID'''
+        FROM pilot p
+        LEFT JOIN flights f ON f.pilotID = p.pilotID
+        LEFT JOIN aircraft a ON f.aircraftID = a.aircraftID
+        LEFT JOIN airport dep ON f.toDestinationID = dep.airportID
+        LEFT JOIN airport arr ON f.fromDestinationID = arr.airportID'''
 
         # If multiple licenseNumbers are provided, filter the results
         if len(licenseNumbers) > 0:
             # Loop over every license number in hte arraylist. If no numbers are provided this code will not run. 
             placeholders = ', '.join(['?'] * len(licenseNumbers))
-            querry += f" AND p.licenseNumber IN ({placeholders})"
+            querry += f" WHERE p.licenseNumber IN ({placeholders})"
             querry += " ORDER BY p.licenseNumber"
             df = pd.read_sql_query(querry, self.dbConnection, params=licenseNumbers)
         else:

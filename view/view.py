@@ -18,7 +18,7 @@ class View:
         print(" 4. Show all flights")
         print(" 5. Update data some records")
         print(" 6. Delete data some records")
-        print(" 7. Show all pilots' schedule")
+        PRINT(" 7. TBD")
         print(" 8. Show specific pilot/pilots schedule")
         print(" 9. Exit\n") 
         pass

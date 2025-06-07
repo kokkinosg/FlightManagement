@@ -36,7 +36,6 @@ class Controller:
                 # View destination  information
                 pass
             elif choice == 7:
-                # self._option7()
                 pass
             elif choice == 8:
                 self._option8()
@@ -61,11 +60,6 @@ class Controller:
         self.view.showQuerryResults(df)
         self.view.getUserInput("\nPress any button to continue...")
     
-    # def _option7(self):
-    #     df = self.pilotModel.getAllPilotsSchedule()
-    #     self.view.showQuerryResults(df)
-    #     self.view.getUserInput(("\nPress any button to continue..."))
-
     def _option8(self):
         # Array to contain all license numbers 
         lisenceNumbers = []
