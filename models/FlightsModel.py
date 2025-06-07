@@ -35,19 +35,21 @@ class FlightsModel:
     
     # Method to update a single flight details 
     def updateFlightDetails(self, selectedFlightsAttribute, existingFlightsAttributeValue, newValue):
-        
-        
-        #Invoke the function which retrieves flights by attribute
+        #First check if there are any data which match the attributes that you want to change. 
         df = self.retrieveFlightByAttribute(selectedFlightsAttribute, existingFlightsAttributeValue)
 
-        # Check if df is empty
+        # Check if df is empty. If it is don't update anything.
         if df.empty:
             print("No flights matching the details provided")
         else:
+            # If some data were retrieved, update that attribute that was used to locate them to a chosen value. 
+            # IT UPDATES ALL RECORDS WITH THAT VALUE . You must search the value with its ID to return a single row 
             query = f"UPDATE flights SET {selectedFlightsAttribute} = ? WHERE {selectedFlightsAttribute} = ?"
             self.cursor.execute(query, (newValue, existingFlightsAttributeValue))
             self.dbConnection.commit()
             print("Flight details updated successfully.")
+
+        
 
 
 
