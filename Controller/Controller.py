@@ -30,8 +30,7 @@ class Controller:
             elif choice == 4:
                 self._option4()
             elif choice == 5:
-                # Assign pilot to flight
-                pass
+                self._option5()
             elif choice == 6:
                 # View destination  information
                 pass
@@ -75,6 +74,19 @@ class Controller:
 
         df = self.pilotModel.getMultiplePilotsSchedule(lisenceNumbers)
         self.view.showQuerryResults(df)
+
+    def _option5(self):
+        # Show all attributes for flights table
+        self.view.showAllAttributes("flights")
+        # Get the required inputs from hte user
+        selectedFlightsAttribute = self.view.getUserInput("Please type in the appropriate attribute whose values will be modified it\n")
+        existingFlightsAttributeValue = self.view.getUserInput("Please type in the value of the attribute to be updated \n")
+        newValue = self.view.getUserInput("Please type in the new value")
+        # Execute the update
+        self.flightsModel.updateFlightDetails(selectedFlightsAttribute,existingFlightsAttributeValue,newValue)
+        self.view.getUserInput("\nPress any button to continue...")
+        
+
 
 
 

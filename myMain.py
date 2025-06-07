@@ -14,28 +14,18 @@ def main():
     cursor = dbConnection.cursor()
     print ("Connection successfull!")
 
-    view = View(dbConnection)
-    flightsModel = FlightsModel(dbConnection)
+    view = View(dbConnection, cursor)
+    flightsModel = FlightsModel(dbConnection, cursor)
     pilotModel = PilotModel(dbConnection)
     dbSetUpModel = DBSetUpModel(dbConnection,cursor)
     controller = Controller(view, dbSetUpModel,flightsModel, pilotModel)
+
+    print("Creating the required tables for testing...")
+    dbSetUpModel.createAllTables()
+    print("Populate the required tables for testing...")
+    dbSetUpModel.addAllSampleData()
+
     controller.run()
-
-
-    
-
-
-
-
-
-    # # Create a DBOperations object which calls the constructor 
-    # db = DBSetUpModel()
-    # view = View()
-    # view.displayMenu()
-    # view.showMessage("User selected menu option " + str(view.getMenuSelection()))
-
-    # # Close connection
-    # db.close()
 
 if __name__ == "__main__":
     main()

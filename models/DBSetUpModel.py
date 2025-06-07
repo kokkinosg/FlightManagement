@@ -15,7 +15,6 @@ class DBSetUpModel:
 
     def createAllTables(self):
         try:
-            print("Creating tables...")
             self._create_table(self._create_flights_table_querry())
             self._create_table(self._create_airport_table_querry())
             self._create_table(self._create_aircraft_table_querry())

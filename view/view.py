@@ -2,9 +2,9 @@ from models.FlightsModel import FlightsModel
 
 class View:
 
-    def __init__(self, dbConnection):
+    def __init__(self, dbConnection, cursor):
         # construct all objects and declare all variables
-        self.flightsModel = FlightsModel(dbConnection)
+        self.flightsModel = FlightsModel(dbConnection, cursor)
         pass
     
     # Public methods
@@ -16,9 +16,9 @@ class View:
         print(" 2. Insert data into FlightInfo")
         print(" 3. Search for a flight")
         print(" 4. Show all flights")
-        print(" 5. Update data some records")
+        print(" 5. Update flight data")
         print(" 6. Delete data some records")
-        PRINT(" 7. TBD")
+        print(" 7. TBD")
         print(" 8. Show specific pilot/pilots schedule")
         print(" 9. Exit\n") 
         pass

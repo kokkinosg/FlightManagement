@@ -14,14 +14,15 @@ class FlightsModel:
     # Method to retrieve all flights which match certain search criteria.
     def retrieveFlightByAttribute(self, flightsAttribute, flightsAttributeValue):
         
-        print("Retrieving all flights where " + flightsAttribute + " is " + str(flightsAttributeValue))
+        print(f"Retrieving all flights where {flightsAttribute} is {flightsAttributeValue}")
         
         # Check if the input parameter to this method matches one of the possible attributes of the fligths table. 
         if flightsAttribute in FlightsModel.possibleAttributes:
             # Construct the querry from input 
-            querry = '''SELECT * FROM flights WHERE ''' + str(flightsAttribute) + " = " + str(flightsAttributeValue)
+            # I need to use a prameterized querry to deal with inputs being sometimes strings sometimes values. 
+            querry = f'''SELECT * FROM flights WHERE {flightsAttribute} = ?'''
 
-            df = pd.read_sql_query(querry, self.dbConnection)
+            df = pd.read_sql_query(querry, self.dbConnection, params= (flightsAttributeValue,))
             return df
         else:
              print("Uknown attribute")
@@ -35,11 +36,12 @@ class FlightsModel:
     # Method to update a single flight details 
     def updateFlightDetails(self, selectedFlightsAttribute, existingFlightsAttributeValue, newValue):
         
+        
         #Invoke the function which retrieves flights by attribute
         df = self.retrieveFlightByAttribute(selectedFlightsAttribute, existingFlightsAttributeValue)
 
         # Check if df is empty
-        if df == None:
+        if df.empty:
             print("No flights matching the details provided")
         else:
             query = f"UPDATE flights SET {selectedFlightsAttribute} = ? WHERE {selectedFlightsAttribute} = ?"

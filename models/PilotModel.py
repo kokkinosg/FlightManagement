@@ -7,22 +7,11 @@ class PilotModel:
 
     def __init__(self, dbConnection):
         self.dbConnection = dbConnection
-
-    # def getAllPilotsSchedule(self):
-
-    #     querry = '''SELECT p.pilotName AS Name, p.pilotSurname AS Surname, p.licenseNumber AS "Licence Number", dep.airportName AS "Current Location", arr.airportName AS "Flies to",
-    #     f.departTime AS "Departure Time", f.arrivalTime AS "Arrival Time", a.airline 
-    #     FROM aircraft a, airport dep, airport arr, flights f, pilot p
-    #     WHERE f.aircraftID =  a.aircraftID AND f.pilotID = p.pilotID AND f.toDestinationID= dep.airportID AND f.fromDestinationID = arr.airportID ORDER BY p.licenseNumber
-    #     '''
-
-    #     df = pd.read_sql_query(querry,self.dbConnection)
-    #     return df
     
     # Gets the specified pilot schedules. The license Numbers is an array of licence numbers. 
     def getMultiplePilotsSchedule(self, licenseNumbers):
 
-        querry = '''SELECT p.pilotName AS Name, p.pilotSurname AS Surname, p.licenseNumber AS "Licence Number", dep.airportName AS "Current Location", arr.airportName AS "Flies to",
+        querry = '''SELECT p.pilotID as "Pilot ID", p.pilotName AS Name, p.pilotSurname AS Surname, p.licenseNumber AS "Licence Number", dep.airportName AS "Current Location", arr.airportName AS "Flies to",
         f.departTime AS "Departure Time", f.arrivalTime AS "Arrival Time", a.airline 
         FROM pilot p
         LEFT JOIN flights f ON f.pilotID = p.pilotID
@@ -39,7 +28,7 @@ class PilotModel:
             df = pd.read_sql_query(querry, self.dbConnection, params=licenseNumbers)
         else:
             # Conclude the querry by ordering by pilot license number
-            querry = querry + " ORDER BY p.licenseNumber "
+            querry += " ORDER BY p.licenseNumber "
             df = pd.read_sql_query(querry, self.dbConnection)
         
         return df
