@@ -78,16 +78,17 @@ class Controller:
     def _option5(self):
         # Show all attributes for flights table
         self.view.showAllAttributes("flights")
+
         # Get the required inputs from hte user
-        selectedFlightsAttribute = self.view.getUserInput("Please type in the appropriate attribute whose values will be modified it\n")
+        selectedFlightsAttribute = self.view.getUserInput("Please type in the appropriate attribute whose values will be modified it \n")
         existingFlightsAttributeValue = self.view.getUserInput("Please type in the value of the attribute to be updated \n")
-        newValue = self.view.getUserInput("Please type in the new value")
+        newValue = self.view.getUserInput("Please type in the new value\n")
 
         print(f"Warning: You are about to update all rows where {selectedFlightsAttribute} = {existingFlightsAttributeValue}")
-        print(f"If you wish to update a different attribute from the selection, record the ID of that record and search again ")
+        print(f"If you wish to update a different attribute from the selection, record the ID of that record and search again")
 
         # Confirm that the user wants to continue. If not simply do nothing.
-        if self._continueProcess:
+        if self._continueProcess():
             # Execute the update
             self.flightsModel.updateFlightDetails(selectedFlightsAttribute,existingFlightsAttributeValue,newValue)
             self.view.getUserInput("\nPress any button to continue...")
