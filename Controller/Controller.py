@@ -108,7 +108,7 @@ class Controller:
                 print(" Process cancelled")
                 return False
             else:
-                continue
+                print("Invalid input. Please enter 1 to continue or 2 to stop.")
 
         
 

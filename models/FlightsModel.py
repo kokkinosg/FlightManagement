@@ -49,6 +49,9 @@ class FlightsModel:
             self.dbConnection.commit()
             print("Flight details updated successfully.")
 
+
+    
+
         
 
 
