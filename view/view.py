@@ -15,10 +15,10 @@ class View:
         print(" 0. Create flights, airport, pilot and aircraft tables and populate them with sample data")
         print(" 1. View flight/airport/aircraft/pilot information based on criteria.")
         print(" 2. View all records in the selected table")
-        print(" 3. Search for a flight")
-        print(" 4. Show all flights")
-        print(" 5. Update flight data")
-        print(" 6. Delete data some records")
+        print(" 3. Add a new record to any table")
+        print(" 4. TBD")
+        print(" 5. TBD")
+        print(" 6. TBD")
         print(" 7. TBD")
         print(" 8. Show specific pilot/pilots schedule")
         print(" 9. Exit\n") 
@@ -26,8 +26,11 @@ class View:
 
     # Method which is called when we want to see results from a search
     def showQuerryResults(self, df):
-        if df.empty:
-            print("No data were retrieved")
+        # We must check if it is None fdirst because if it is and we check for empty first, it will throw an error.  
+        if df is None:
+            print("Something went wrong — no DataFrame was returned.")
+        elif df.empty:
+            print("Query succeeded, but returned no data.")
         else:
             print(df)
     
@@ -47,7 +50,10 @@ class View:
     
     def getUserInput(self, message):
         try:
-            userChoice = input(message)
+            # Invoke the showMessage method to print the message
+            self.showMessage(message)
+            # Get the user input from a new line
+            userChoice = input()
             return userChoice
         except Exception as e:
             print("Error whilst getting user input: " + str(e))

@@ -75,21 +75,30 @@ class Controller:
         self.view.showQuerryResults(df)
         self.view.getUserInput("\nPress any button to continue...")
 
-
-    
-
-
-
-
-
-
     def _option3(self):
-        self.view.showAllAttributes("flights")
-        flightsAttribute = self.view.getUserInput("Please type in the appropriate attribute to initiate search\n")
-        flightsAttributeValue = self.view.getUserInput("Please type in the value for the attribute\n")
-        df = self.flightsModel.retrieveFlightByAttribute(flightsAttribute, flightsAttributeValue)
-        self.view.showQuerryResults(df)
-        self.view.getUserInput("\nPress any button to continue...")
+        # Get the table from the user.
+        tableName = self.view.getUserInput("Please type the table containing the required data\n")
+        # Get the attribute names for that table 
+        attributeNames = self.baseModel.getTableAttributeNames(tableName)
+        # Get the attribute data types from that table 
+        attributeDataTypes = self.baseModel.getTableAttributeDataTypes(tableName)
+        # Show the required attributes and their data types to the user. 
+        self.view.showMessage(f"To add a row to the {tableName} please provide the below attributes")
+        # Initialise an empty params list to contain the params 
+        params = []
+        # Initiate a counter 
+        counter = 0 
+        # Request as many user inputs as there are attributes 
+        for attribute in attributeNames:
+            # Get the data type of this attribute 
+            attributeType = attributeDataTypes[counter]
+            # Get the user input
+            param = self.view.getUserInput(f"Please provide an input of type {attributeType}  for {attribute}")
+            # Add the parameter to the list
+            params.append(param)
+            counter += 1
+        
+        self.baseModel.addRowToTable(tableName,params)
     
     def _option4(self):
         df = self.flightsModel.showAllFlights()
