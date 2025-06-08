@@ -53,6 +53,15 @@ class BaseModel:
         else:
             print(f"Table '{tableName}' is not valid.")
 
+    # Method which deletes rows which match certain criteria.
+    def deleteRowsFromTable(self, tableName, attributeName, attributeValue):
+        # Check if the attribute name is valid for a specified table
+        if self._isValidAttribute(tableName, attributeName):
+            # Construct and execute the delete querry. If it returns true, return true here
+            self._executeDeleteQuerry(tableName, attributeName, attributeValue)
+        else:
+            return None 
+
     # Function to get all column names / attributes from a table 
     def getTableAttributeNames(self, tableName):
         # This is a META querry which will return the schema of the table, from which i will only extract the attribute names. 
@@ -99,6 +108,23 @@ class BaseModel:
         except Exception as e:
             print(f"Error adding row to '{tableName}': {e}")
 
+    # Helper function which creates and executes a delete querry by specifying the Table, the attribute from that table and the value of the attribute. 
+    # It returns true if succesful     
+    def _executeDeleteQuerry(self, tableName,attributeName,attributeValue):
+        try: 
+            # Construct a parameterised querry to return all flights mathing the criterion
+            querry = f''' DELETE FROM {tableName} WHERE {attributeName} = ?'''
+            # We need the cursor execute this querry.
+            self.cursor.execute(querry, (attributeValue,))
+            self.dbConnection.commit()
+
+            # Use rowcount to see if actually any records would be affected by the querry
+            if self.cursor.rowcount == 0:
+                print(f"No records found in '{tableName}' where {attributeName} = {attributeValue}. Nothing was deleted.")
+            else:
+                print(f"Successfully deleted {self.cursor.rowcount} record(s) from '{tableName}' where {attributeName} = {attributeValue}.")
+        except Exception as e:
+            print(f"Error encountered at _executeDeleteQuery: {e}")
 
     # Helper function which creates and executes a select querry by specifying the Table, the attribute from that table and the value of the attribute.      
     # It returns a dataframe with the results

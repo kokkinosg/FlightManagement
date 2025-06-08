@@ -101,9 +101,23 @@ class Controller:
         self.baseModel.addRowToTable(tableName,params)
     
     def _option4(self):
-        df = self.flightsModel.showAllFlights()
-        self.view.showQuerryResults(df)
-        self.view.getUserInput("\nPress any button to continue...")
+        # Get the table from the user.
+        table = self.view.getUserInput("Please type the table containing the data to be deleted\n")
+        # Get the attribute from the user. 
+        attribute = self.view.getUserInput(" Please type the attribute which will narrow the search\n")
+        # Get the attribute value from the user. 
+        attributeValue = self.view.getUserInput("Please type the value of the selected attribute\n")
+
+        # Display warning 
+        self.view.showMessage(f"You are about to delete all records from {table} where {attribute} = {attributeValue}")
+
+        # Ask for confirmation 
+        if self._continueProcess():
+            self.baseModel.deleteRowsFromTable(table,attribute,attributeValue)
+            self.view.getUserInput("\nPress any button to continue...")
+        else:
+            self.view.getUserInput("\nPress any button to continue...")
+        
     
     def _option8(self):
         # Array to contain all license numbers 
