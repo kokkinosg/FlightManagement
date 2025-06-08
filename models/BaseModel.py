@@ -24,6 +24,17 @@ class BaseModel:
         else:
             return None 
         
+    # Method to return all rows from a specified table
+    def retrieveAllDataFromTable(self,tableName):
+        # If the table is valid, i.e. exists in database, carry out the querry
+        if self._isValidTable(tableName):
+            querry = f"SELECT * FROM {tableName}"
+            df = pd.read_sql_query(querry, self.dbConnection)
+            return df
+        else:
+            print(f"{tableName} does not exist in the database.")
+            return None 
+
 
     # Helper function which creates and executes a select querry by specifying the Table, the attribute from that table and the value of the attribute.      
     # It returns a dataframe with the results
@@ -61,6 +72,15 @@ class BaseModel:
             print (f"{attributeName} does not exist in {tableName} table.")
             return False
         
+    # Check if a chosen table is valid
+    def _isValidTable(self,tableName):
+        validTableNames = ["flights", "pilot", "aircraft", "airport"]
+
+        # If the tableName is in hte list of valid tables, return true else return false. 
+        if tableName in validTableNames:
+            return True
+        else:
+            return False
 
     
   

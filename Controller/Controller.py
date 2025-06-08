@@ -2,13 +2,14 @@ import sqlite3
 
 class Controller:
 
-    # Connect to the database 
-    def __init__(self,view, dBSetUpModel, flightsModel, pilotModel): #, airportModel, pilotModel, aircraftModel):
+    # Create objects of all models and the view.
+    def __init__(self,view, dBSetUpModel, flightsModel, pilotModel, BaseModel): #, airportModel, pilotModel, aircraftModel):
         self.view = view
+        self.baseModel = BaseModel
         self.dBSetUpModel = dBSetUpModel
-        self.flightsModel = flightsModel
+        # self.flightsModel = flightsModel
         # self.airportModel = airportModel
-        self.pilotModel = pilotModel
+        # self.pilotModel = pilotModel
         # self.aircraftModel = aircraftModel
 
     def run(self):
@@ -19,11 +20,14 @@ class Controller:
             # Get the user choice
             choice  = self.view.getMenuSelection()
 
-            if choice == 1:
-                # Create flight tables
+            if choice == 0:
+                self._option0()
+                pass
+            elif choice == 1:
+                self._option1()
                 pass
             elif choice == 2:
-                # Add flight
+                self._option2()
                 pass
             elif choice == 3:
                 self._option3()
@@ -46,6 +50,39 @@ class Controller:
     
    
     # Local methods
+    def _option0(self):
+        self.view.showMessage("Creating the required tables for testing...")
+        self.dBSetUpModel.createAllTables()
+        self.view.showMessage("Populating the required tables for testing with sample data...")
+        self.dBSetUpModel.addAllSampleData()
+
+    def _option1(self):
+        # Get the table from the user.
+        table = self.view.getUserInput("Please type the table contianing the required data\n")
+        # Get the attribute from the user. 
+        attribute = self.view.getUserInput(" Please type the attribute which will narrow the search\n")
+        # Get the attribute value from the user. 
+        attributeValue = self.view.getUserInput("Please type the value of the selected attribute\n")
+        df = self.baseModel.retrieveTableDataByAttribute(table,attribute,attributeValue)
+        self.view.showQuerryResults(df)
+        self.view.getUserInput("\nPress any button to continue...")
+    
+    def _option2(self):
+        # Get the table from the user.
+        table = self.view.getUserInput("Please type the table contianing the required data\n")
+        # Get all rows from the table
+        df = self.baseModel.retrieveAllDataFromTable(table)
+        self.view.showQuerryResults(df)
+        self.view.getUserInput("\nPress any button to continue...")
+
+
+    
+
+
+
+
+
+
     def _option3(self):
         self.view.showAllAttributes("flights")
         flightsAttribute = self.view.getUserInput("Please type in the appropriate attribute to initiate search\n")

@@ -5,6 +5,7 @@ from view.view import View
 from models.FlightsModel import FlightsModel
 from Controller.Controller import Controller
 from models.PilotModel import PilotModel
+from models.BaseModel import BaseModel
 
 def main():
         
@@ -14,17 +15,15 @@ def main():
     cursor = dbConnection.cursor()
     print ("Connection successfull!")
 
+    # Instantiate all models, view and controller
     view = View(dbConnection, cursor)
     flightsModel = FlightsModel(dbConnection, cursor)
     pilotModel = PilotModel(dbConnection)
     dbSetUpModel = DBSetUpModel(dbConnection,cursor)
-    controller = Controller(view, dbSetUpModel,flightsModel, pilotModel)
+    baseModel = BaseModel(dbConnection,cursor)
+    controller = Controller(view, dbSetUpModel,flightsModel, pilotModel, baseModel)
 
-    print("Creating the required tables for testing...")
-    dbSetUpModel.createAllTables()
-    print("Populate the required tables for testing...")
-    dbSetUpModel.addAllSampleData()
-
+    # Run the logic defined in the controller. 
     controller.run()
 
 if __name__ == "__main__":

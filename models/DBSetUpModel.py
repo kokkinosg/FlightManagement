@@ -3,27 +3,24 @@ import sqlite3
 # This class is for creating the tables and populating them with sample data. 
 class DBSetUpModel:
 
-    # Constructor
-    # Class attributes are created here.
-    # Upon instantiation of this class, it connects to the database and creates the tables if they do not already exist. 
+
     def __init__(self, dbConnection, cursor ):
-        try:
             self.dbConnection = dbConnection
             self.cur = cursor
-        except Exception as e:
-            print("Error during initialisation of DBSetUpModel: ", e)
 
+    # Method which creates all 4 tables
     def createAllTables(self):
         try:
+            # Invoke helper functions to create each table
             self._create_table(self._create_flights_table_querry())
             self._create_table(self._create_airport_table_querry())
             self._create_table(self._create_aircraft_table_querry())
             self._create_table(self._create_pilot_table_querry())
-
             print("Tables created successfully!")
         except Exception as e:
             print("Error in creating all tables: " + str(e))
-    
+
+    # Method which adds all the sample data to each table 
     def addAllSampleData(self):
         try:
             print("Adding sample data to the database...")
@@ -45,15 +42,7 @@ class DBSetUpModel:
             print("Error in populating all tables with sample data: " + str(e))
 
 
-    # Close connection to the database
-    def close(self):
-        try: 
-            self.dbConnection.close()
-            print("Connection closed succesffully!")
-        except Exception as e:
-            print("Error whilst attempting to close the connection: " + e)
-
-    # Private methods
+    # Helper methods
     # This method creates all the necessary tables if they do not exist. It is called in the constructor. 
     def _create_table(self, sqlQuerry):
         # Pass the table creation SQL querries to the cursor and execute them. 

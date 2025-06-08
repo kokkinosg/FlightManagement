@@ -12,8 +12,9 @@ class View:
     def displayMenu(self): 
         print("\n Menu:")
         print("**********")
-        print(" 1. Create table FlightInfo")
-        print(" 2. Insert data into FlightInfo")
+        print(" 0. Create flights, airport, pilot and aircraft tables and populate them with sample data")
+        print(" 1. View flight/airport/aircraft/pilot information based on criteria.")
+        print(" 2. View all records in the selected table")
         print(" 3. Search for a flight")
         print(" 4. Show all flights")
         print(" 5. Update flight data")
@@ -35,7 +36,7 @@ class View:
     def getMenuSelection(self):
         try:
             userChoice = int(input("Please choose an option: "))
-            if 1 <= userChoice <= 9:
+            if 0 <= userChoice <= 9:
                 return userChoice
             else:
                 print("Invalid choice. Please enter a number between 1 and 9.")
