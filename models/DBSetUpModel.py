@@ -1,4 +1,3 @@
-import sqlite3
 
 # This class is for creating the tables and populating them with sample data. 
 class DBSetUpModel:
@@ -20,6 +19,14 @@ class DBSetUpModel:
         except Exception as e:
             print("Error in creating all tables: " + str(e))
 
+    # Method to close the connection
+    def closeConnection(self):
+        try:
+            self.dbConnection.close()
+            print("Database connection closed successfully.")
+        except Exception as e:
+            print(f"Error while closing the connection: {e}")
+
     # Method which adds all the sample data to each table 
     def addAllSampleData(self):
         try:
@@ -40,7 +47,6 @@ class DBSetUpModel:
             print("All sample data added succesfully!")
         except Exception as e:
             print("Error in populating all tables with sample data: " + str(e))
-
 
     # Helper methods
     # This method creates all the necessary tables if they do not exist. It is called in the constructor. 

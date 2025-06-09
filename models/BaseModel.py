@@ -95,6 +95,35 @@ class BaseModel:
             attributeDataTypes.append(column)
         return attributeDataTypes
 
+    # Method to change the pilotID assigned to a flight to a different one which exists in the pilot table. 
+    def assignPilotToFlight(self, oldPilotID, newPilotID):
+        # Specify the table and attribute to be updated. 
+        tableName = "flights"
+        attributeName = "pilotID"
+
+        # Get all available pilotIDs from tge pilot table
+        availablePilotIDs = self._getAllAttributeValues("pilot", "pilotID")
+
+        # Only update the pilot id of a flight, if the pilotID also exists in the pilot table 
+        if newPilotID in availablePilotIDs:
+            # Invoke the updateRowsFromTable function to execute the update to pilot
+            self.updateRowsFromTable(tableName,attributeName,newPilotID,attributeName, oldPilotID)
+        else:
+            print(f"{newPilotID} does not correspond to a recorded Pilot in the Pilot table")
+   
+    # Helper function to extract all values in a specified column/attribute
+    def _getAllAttributeValues(self, tableName, attributeName):
+        try:
+            # Construct a simple select querry to get all values in a specified column
+            querry = f"SELECT {attributeName} FROM {tableName}"
+            # Get the results from the querry to a dataframe
+            df = pd.read_sql_query(querry, self.dbConnection)
+            # extract all the values to a list
+            column_values = df[attributeName].tolist()
+            return column_values
+        except Exception as e:
+            print(f"Error at getAllAttributeValues: {e}")
+
     # Helper function to execute the update querry
     def _executeUpdateQuerry(self, tableName, setAttributeName, setAttributeValue, whereAttributeName, whereAttributeValue):
         # Construct the parameterised querry
@@ -222,5 +251,58 @@ class BaseModel:
         else:
             return False
 
-    
-  
+    # Methods with specific querries 
+
+    # Method to return the total number of passengers flown by a specific aircraft 
+    def getTotalPassengerPerAircract(self):
+        try: 
+            querry = '''SELECT a.model AS AircraftModel, a.airline, SUM(f.passengerCount) AS TotalPassengers
+                    FROM flights f
+                    JOIN aircraft a ON f.aircraftID = a.aircraftID
+                    GROUP BY f.aircraftID;'''
+            df = pd.read_sql_query(querry,self.dbConnection)
+            return df
+        except Exception as e:
+            print(f"Error encountered at getTotalPassengerPerAircract : {e}")
+            return None
+
+    # Method to return the number of Flights to each destination airport
+    def getNumFlightsPerDestAirport(self):
+        try:
+            querry = '''SELECT a.airportName AS Destination, COUNT(f.flightID) AS TotalFlights
+            FROM flights f
+            JOIN airport a ON f.toDestinationID = a.airportID
+            GROUP BY f.toDestinationID;'''
+            df = pd.read_sql_query(querry,self.dbConnection)
+            return df
+        except Exception as e:
+            print(f"Error encountered at getNumFlightsPerDestAirport : {e}")
+            return None
+        
+    # Method to return the number of flights assigned to each pilot
+    def getNumFlightsPerPilot(self):
+        try:
+            # Concatenate the name 
+            querry = '''SELECT p.pilotName || ' ' || p.pilotSurname AS Pilot, COUNT(f.flightID) AS TotalFlights
+            FROM flights f 
+            JOIN pilot p ON f.pilotID = p.pilotID
+            GROUP BY f.pilotID;'''
+            df = pd.read_sql_query(querry,self.dbConnection)
+            return df
+        except Exception as e:
+            print(f"Error encountered at getNumFlightsPerPilot : {e}")
+            return None
+        
+    # Method to return the average travel distance per pilot
+    def getAvgDistancePerPilot(self):
+        try:
+            # Calculates the average travel distance of all flights flown by each pilot, groups the results by pilot and displays their full name with concatenation.
+            querry = '''SELECT p.pilotName || ' ' || p.pilotSurname AS Pilot, ROUND(AVG(f.travelDistanceKM), 2) AS AvgDistanceKM
+            FROM flights f
+            JOIN pilot p ON f.pilotID = p.pilotID
+            GROUP BY f.pilotID;'''
+            df = pd.read_sql_query(querry,self.dbConnection)
+            return df
+        except Exception as e:
+            print(f"Error encountered at getNumFlightsPerPilot : {e}")
+            return None

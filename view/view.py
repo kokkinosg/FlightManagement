@@ -1,10 +1,8 @@
-from models.FlightsModel import FlightsModel
+
 
 class View:
 
-    def __init__(self, dbConnection, cursor):
-        # construct all objects and declare all variables
-        self.flightsModel = FlightsModel(dbConnection, cursor)
+    def __init__(self):
         pass
     
     # Public methods
@@ -12,16 +10,28 @@ class View:
     def displayMenu(self): 
         print("\n Menu:")
         print("**********")
+        print(" Main Functions\n")
+
         print(" 0. Create flights, airport, pilot and aircraft tables and populate them with sample data")
-        print(" 1. View flight/airport/aircraft/pilot information based on criteria.")
+        print(" 1. View flight/airport/aircraft/pilot information based on criteria")
         print(" 2. View all records in the selected table - E.g. View all flights")
         print(" 3. Add a new record to any table - E.g. Add a new flight")
         print(" 4. Delete record/s from any table - E.g. Delete a flight")
-        print(" 5. Update existing record/s from any table - E.g. Assign a pilot to a flight")
+        print(" 5. Update existing record/s from any table - E.g. Assign a pilot to a flight\n")
+        print("**********")
+        print(" Frequently used functions\n")
         print(" 6. Show specific pilot/pilots schedule")
-        print(" 7. TBD")
-        print(" 8. TBD")
-        print(" 9. Exit\n") 
+        print(" 7. Add a new flight")
+        print(" 8. View flights by criteria")
+        print(" 9. Update flight information") 
+        print(" 10. Assign pilot to flight")
+        print(" 11. View destination (airport) information")
+        print(" 12. Update destination (airport) information")
+        print(" 13. Total Number of Passengers Flown by Each Aircraft") 
+        print(" 14. Number of Flights Assigned to Each Pilot")
+        print(" 15. Number of Flights to Each Destination Airport")
+        print(" 16. Average Travel Distance per Pilot")
+        print(" 17. Exit\n") 
         pass
 
     # Method which is called when we want to see results from a search
@@ -39,10 +49,10 @@ class View:
     def getMenuSelection(self):
         try:
             userChoice = int(input("Please choose an option: "))
-            if 0 <= userChoice <= 9:
+            if 0 <= userChoice <= 17:
                 return userChoice
             else:
-                print("Invalid choice. Please enter a number between 1 and 9.")
+                print("Invalid choice. Please enter a number between 0 and 17.")
                 return -1
         except ValueError:
             print("Invalid input. Please enter a number.")
@@ -64,25 +74,6 @@ class View:
         print(str(message))
         pass
 
-    # Method to show all possible attributes for a table 
-    def showAllAttributes(self, table):
-
-        print("Please type one of the following search criteria followed by a value\n")
-
-        if table == "flights":
-            print(self.flightsModel.possibleAttributes)
-        elif table == "airport":
-            # to be implemented
-            pass
-        elif table == "pilot":
-            # to be implemented
-            pass
-        elif table == "aircraft":
-            # to be implemented
-            pass
-        else:
-            print("Table does not exist")
-            pass
 
 
         
