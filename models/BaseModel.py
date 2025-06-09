@@ -16,8 +16,8 @@ class BaseModel:
 
     # Method which retrieves a dataframe with the results of the querry. You specify the table to get the data from, the attribute and its value. 
     def retrieveTableDataByAttribute(self, tableName, attributeName, attributeValue):
-        # Check if the attribute name is valid for a specified table
-        if self._isValidAttribute(tableName, attributeName):
+        # Check the table is valid and the attribue exists in that table
+        if self._isValidTable(tableName) and self._isValidAttribute(tableName, attributeName):
             # Construct and execute the select querry
             df = self._executeSelectQuerry(tableName, attributeName, attributeValue)
             return df
@@ -55,10 +55,19 @@ class BaseModel:
 
     # Method which deletes rows which match certain criteria.
     def deleteRowsFromTable(self, tableName, attributeName, attributeValue):
-        # Check if the attribute name is valid for a specified table
-        if self._isValidAttribute(tableName, attributeName):
+        # Check the table is valid and the attribue exists in that table
+        if self._isValidTable(tableName) and self._isValidAttribute(tableName, attributeName):
             # Construct and execute the delete querry. If it returns true, return true here
             self._executeDeleteQuerry(tableName, attributeName, attributeValue)
+        else:
+            return None 
+
+    # Method which updates a single attribute of a row obtained from a single search criterion.
+    def updateRowsFromTable(self, tableName, setAttributeName, setAttributeValue, whereAttributeName, whereAttributeValue):
+        # Check the table is valid and the attribue exists in that table
+        if self._isValidTable(tableName) and self._isValidAttribute(tableName, setAttributeName) and self._isValidAttribute(tableName, whereAttributeName):
+            # Construct and execute the delete querry. If it returns true, return true here
+            self._executeUpdateQuerry(tableName, setAttributeName, setAttributeValue, whereAttributeName, whereAttributeValue)
         else:
             return None 
 
@@ -86,6 +95,48 @@ class BaseModel:
             attributeDataTypes.append(column)
         return attributeDataTypes
 
+    # Helper function to execute the update querry
+    def _executeUpdateQuerry(self, tableName, setAttributeName, setAttributeValue, whereAttributeName, whereAttributeValue):
+        # Construct the parameterised querry
+        querry = f'''UPDATE {tableName} SET {setAttributeName} = ? WHERE {whereAttributeName} = ? '''
+
+        try:
+            self.cursor.execute(querry, (setAttributeValue,whereAttributeValue))
+            self.dbConnection.commit()
+             # Use rowcount to see if actually any records would be affected by the querry
+            if self.cursor.rowcount == 0:
+                print(f"No records found in '{tableName}' where {whereAttributeName} = {whereAttributeValue}. Nothing was updated.")
+            else:
+                print(f"Successfully updated {self.cursor.rowcount} record(s) in '{tableName}': set {setAttributeName} = {setAttributeValue} where {whereAttributeName} = {whereAttributeValue}.")
+        except Exception as e:
+            print(f"Error encountered at _executeUpdateQuery: {e}")
+        
+    # Gets the specified pilot schedules. If no pilot licences are specified, it shows all pilots.
+    # The license Numbers is an array of licence numbers. 
+    def getMultiplePilotsSchedule(self, licenseNumbers):
+
+        querry = '''SELECT p.pilotID as "Pilot ID", p.pilotName AS Name, p.pilotSurname AS Surname, p.licenseNumber AS "Licence Number", dep.airportName AS "Current Location", arr.airportName AS "Flies to",
+        f.departTime AS "Departure Time", f.arrivalTime AS "Arrival Time", a.airline 
+        FROM pilot p
+        LEFT JOIN flights f ON f.pilotID = p.pilotID
+        LEFT JOIN aircraft a ON f.aircraftID = a.aircraftID
+        LEFT JOIN airport dep ON f.toDestinationID = dep.airportID
+        LEFT JOIN airport arr ON f.fromDestinationID = arr.airportID'''
+
+        # If multiple licenseNumbers are provided, filter the results
+        if len(licenseNumbers) > 0:
+            # Loop over every license number in hte arraylist. If no numbers are provided this code will not run and instead it will show all pilot's schedule. 
+            placeholders = ', '.join(['?'] * len(licenseNumbers))
+            querry += f" WHERE p.licenseNumber IN ({placeholders})"
+            querry += " ORDER BY p.licenseNumber"
+            df = pd.read_sql_query(querry, self.dbConnection, params=licenseNumbers)
+        else:
+            # Conclude the querry by ordering by pilot license number
+            querry += " ORDER BY p.licenseNumber "
+            df = pd.read_sql_query(querry, self.dbConnection)
+        
+        return df
+
     # Helper function to construct the insertion querry. The params are the values correspodning to the attributeNames
     def _constructInsertQuerry(self, tableName, params, attributeNames):
             # Create the approapraite number of placeholders in a string like "?,?,?..."
@@ -96,7 +147,6 @@ class BaseModel:
             querry = f"INSERT INTO {tableName} ({attributeNamesString}) VALUES ({placeholders})"
             return querry
     
-
     # Helper function to execute the insertion querry 
     def _executeInsertQuerry(self,tableName, querry, params):
         # Execute querry

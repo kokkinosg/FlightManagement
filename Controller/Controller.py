@@ -3,14 +3,10 @@ import sqlite3
 class Controller:
 
     # Create objects of all models and the view.
-    def __init__(self,view, dBSetUpModel, flightsModel, pilotModel, BaseModel): #, airportModel, pilotModel, aircraftModel):
+    def __init__(self,view, dBSetUpModel, BaseModel): 
         self.view = view
         self.baseModel = BaseModel
         self.dBSetUpModel = dBSetUpModel
-        # self.flightsModel = flightsModel
-        # self.airportModel = airportModel
-        # self.pilotModel = pilotModel
-        # self.aircraftModel = aircraftModel
 
     def run(self):
         while True:
@@ -36,12 +32,12 @@ class Controller:
             elif choice == 5:
                 self._option5()
             elif choice == 6:
-                # View destination  information
+                self._option6()
                 pass
             elif choice == 7:
                 pass
             elif choice == 8:
-                self._option8()
+                pass
             elif choice == 9:
                 #Close connection and exit
                 break
@@ -59,6 +55,9 @@ class Controller:
     def _option1(self):
         # Get the table from the user.
         table = self.view.getUserInput("Please type the table contianing the required data\n")
+        self.view.showMessage(f"These are the table: {table} columns/attributes\n")
+        # Show all possible attributes for that table 
+        self.view.showMessage(self.baseModel.getTableAttributeNames(table))
         # Get the attribute from the user. 
         attribute = self.view.getUserInput(" Please type the attribute which will narrow the search\n")
         # Get the attribute value from the user. 
@@ -103,8 +102,13 @@ class Controller:
     def _option4(self):
         # Get the table from the user.
         table = self.view.getUserInput("Please type the table containing the data to be deleted\n")
+        self.view.showMessage(f"These are the table: {table} columns/attributes\n")
+        # Show all possible attributes for that table 
+        self.view.showMessage(self.baseModel.getTableAttributeNames(table))
+        
         # Get the attribute from the user. 
-        attribute = self.view.getUserInput(" Please type the attribute which will narrow the search\n")
+        attribute = self.view.getUserInput(" Please choose one of the above attributes to narrow down the search \n")
+
         # Get the attribute value from the user. 
         attributeValue = self.view.getUserInput("Please type the value of the selected attribute\n")
 
@@ -118,42 +122,48 @@ class Controller:
         else:
             self.view.getUserInput("\nPress any button to continue...")
         
-    
-    def _option8(self):
+    def _option5(self):
+        # Get the table from the user.
+        tableName = self.view.getUserInput("Please type the table containing the data to be deleted\n")
+        # Show all possible attributes for that table 
+        self.view.showMessage(f"These are the table: {tableName} columns/attributes\n")
+        self.view.showMessage(self.baseModel.getTableAttributeNames(tableName))
+        # Get the attribute from the user. 
+        whereAttributeName = self.view.getUserInput(" Please type the attribute which will narrow the search\n")
+        # Get the attribute value from the user. 
+        whereAttributeValue = self.view.getUserInput("Please type the value of the selected attribute\n")
+        # Get the attribute from the user. 
+        setAttributeName = self.view.getUserInput(" Please type the attribute whose value will be updated\n")
+        # Get the attribute value from the user. 
+        setAttributeValue = self.view.getUserInput("Please type the new value for the attribute\n")
+
+        # Display warning 
+        self.view.showMessage(f"You are about to update {setAttributeName} = {setAttributeValue} of all rows in {tableName} where {whereAttributeName} = {whereAttributeValue}")
+
+        # Ask for confirmation 
+        if self._continueProcess():
+            self.baseModel.updateRowsFromTable(tableName, setAttributeName, setAttributeValue, whereAttributeName, whereAttributeValue)
+            self.view.getUserInput("\nPress any button to continue...")
+        else:
+            self.view.getUserInput("\nPress any button to continue...")
+
+
+
+    def _option6(self):
         # Array to contain all license numbers 
         lisenceNumbers = []
 
         # Get the first license number 
-        lisenceNumber = self.view.getUserInput("Please type in the pilot's license number or press enter to display results\n")
+        lisenceNumber = self.view.getUserInput("Please type the first pilot's license number or press enter to display all pilots' schedule\n")
 
         # Get additional license Numbers until the user presses enter which will provide an empty string
         while lisenceNumber != "":
             lisenceNumbers.append(lisenceNumber)
-            lisenceNumber = self.view.getUserInput("Please type in the pilot's license number or press enter to display results\n")
+            lisenceNumber = self.view.getUserInput("Please type in another pilot's license number or press enter to diplay specified pilots' schedule\n")
 
-
-        df = self.pilotModel.getMultiplePilotsSchedule(lisenceNumbers)
+        df = self.baseModel.getMultiplePilotsSchedule(lisenceNumbers)
         self.view.showQuerryResults(df)
 
-    def _option5(self):
-        # Show all attributes for flights table
-        self.view.showAllAttributes("flights")
-
-        # Get the required inputs from hte user
-        selectedFlightsAttribute = self.view.getUserInput("Please type in the appropriate attribute whose values will be modified it \n")
-        existingFlightsAttributeValue = self.view.getUserInput("Please type in the value of the attribute to be updated \n")
-        newValue = self.view.getUserInput("Please type in the new value\n")
-
-        print(f"Warning: You are about to update all rows where {selectedFlightsAttribute} = {existingFlightsAttributeValue}")
-        print(f"If you wish to update a different attribute from the selection, record the ID of that record and search again")
-
-        # Confirm that the user wants to continue. If not simply do nothing.
-        if self._continueProcess():
-            # Execute the update
-            self.flightsModel.updateFlightDetails(selectedFlightsAttribute,existingFlightsAttributeValue,newValue)
-            self.view.getUserInput("\nPress any button to continue...")
-        else:
-            return
 
     # Boolean check to see if the process will continue  
     def _continueProcess(self):
