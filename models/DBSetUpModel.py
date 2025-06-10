@@ -11,10 +11,10 @@ class DBSetUpModel:
     def createAllTables(self):
         try:
             # Invoke helper functions to create each table
-            self._create_table(self._create_flights_table_querry())
-            self._create_table(self._create_airport_table_querry())
-            self._create_table(self._create_aircraft_table_querry())
-            self._create_table(self._create_pilot_table_querry())
+            self._create_table(self._create_flights_table_query())
+            self._create_table(self._create_airport_table_query())
+            self._create_table(self._create_aircraft_table_query())
+            self._create_table(self._create_pilot_table_query())
             print("Tables created successfully!")
         except Exception as e:
             print("Error in creating all tables: " + str(e))
@@ -50,16 +50,16 @@ class DBSetUpModel:
 
     # Helper methods
     # This method creates all the necessary tables if they do not exist. It is called in the constructor. 
-    def _create_table(self, sqlQuerry):
+    def _create_table(self, sqlQuery):
         # Pass the table creation SQL querries to the cursor and execute them. 
-        self.cur.execute(sqlQuerry)
+        self.cur.execute(sqlQuery)
         # Commit the change
         self.dbConnection.commit()
         pass
 
-    # SQL querry to create the flights table
-    def _create_flights_table_querry(self):
-        sqlQuerry = '''CREATE TABLE IF NOT EXISTS flights (
+    # SQL query to create the flights table
+    def _create_flights_table_query(self):
+        sqlQuery = '''CREATE TABLE IF NOT EXISTS flights (
             flightID INTEGER PRIMARY KEY AUTOINCREMENT,
             aircraftID INTEGER NOT NULL,
             pilotID INTEGER NOT NULL,
@@ -75,22 +75,22 @@ class DBSetUpModel:
             FOREIGN KEY (fromDestinationID) REFERENCES airport(airportID),
             FOREIGN KEY (toDestinationID) REFERENCES airport(airportID)
             );'''
-        return sqlQuerry
+        return sqlQuery
     
-    # SQL querry to create the airport table
-    def _create_airport_table_querry(self):
-        sqlQuerry = '''CREATE TABLE IF NOT EXISTS airport (
+    # SQL query to create the airport table
+    def _create_airport_table_query(self):
+        sqlQuery = '''CREATE TABLE IF NOT EXISTS airport (
             airportID INTEGER PRIMARY KEY AUTOINCREMENT,
             airportName TEXT NOT NULL,
             city TEXT,
             country TEXT,
             postCode TEXT NOT NULL
             );'''
-        return sqlQuerry
+        return sqlQuery
     
-    # SQL querry to create the pilot table
-    def _create_pilot_table_querry(self):
-        sqlQuerry = '''CREATE TABLE IF NOT EXISTS pilot (
+    # SQL query to create the pilot table
+    def _create_pilot_table_query(self):
+        sqlQuery = '''CREATE TABLE IF NOT EXISTS pilot (
             pilotID INTEGER PRIMARY KEY AUTOINCREMENT,
             pilotName TEXT NOT NULL,
             pilotSurname TEXT NOT NULL,
@@ -102,11 +102,11 @@ class DBSetUpModel:
             FOREIGN KEY (aircraftID) REFERENCES aircraft(aircraftID),
             FOREIGN KEY (currentLocationID) REFERENCES airport(airportID)
             );'''
-        return sqlQuerry
+        return sqlQuery
     
-    # SQL querry to create the aircraft table
-    def _create_aircraft_table_querry(self):
-        sqlQuerry ='''CREATE TABLE IF NOT EXISTS aircraft (
+    # SQL query to create the aircraft table
+    def _create_aircraft_table_query(self):
+        sqlQuery ='''CREATE TABLE IF NOT EXISTS aircraft (
             aircraftID INTEGER PRIMARY KEY AUTOINCREMENT,
             model TEXT NOT NULL,
             airline TEXT NOT NULL,
@@ -116,12 +116,12 @@ class DBSetUpModel:
             currentLocationID INTEGER NOT NULL,
             FOREIGN KEY (currentLocationID) REFERENCES airport(airportID)
             );'''
-        return sqlQuerry
+        return sqlQuery
     
     # Add sample data to each table
     def _add_sample_data_to_table(self, querriesArray):
-        for querry in querriesArray:
-                self.cur.execute(querry)
+        for query in querriesArray:
+                self.cur.execute(query)
         self.dbConnection.commit()
         pass
 
@@ -372,3 +372,4 @@ class DBSetUpModel:
         ]
         return sqlQuerries
     
+

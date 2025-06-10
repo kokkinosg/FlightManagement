@@ -82,7 +82,7 @@ class Controller:
         # Get the attribute value from the user. 
         attributeValue = self.view.getUserInput("Please type the value of the selected attribute\n")
         df = self.baseModel.retrieveTableDataByAttribute(table,attribute,attributeValue)
-        self.view.showQuerryResults(df)
+        self.view.showQueryResults(df)
         self.view.getUserInput("\nPress any button to continue...")
     
     # View all records in the selected table - E.g. View all flights
@@ -91,7 +91,7 @@ class Controller:
         table = self.view.getUserInput("Please type the table contianing the required data\n")
         # Get all rows from the table
         df = self.baseModel.retrieveAllDataFromTable(table)
-        self.view.showQuerryResults(df)
+        self.view.showQueryResults(df)
         self.view.getUserInput("\nPress any button to continue...")
 
     # Add a new record to any table - E.g. Add a new flight
@@ -185,7 +185,7 @@ class Controller:
             lisenceNumber = self.view.getUserInput("Please type in another pilot's license number or press enter to diplay specified pilots' schedule\n")
 
         df = self.baseModel.getMultiplePilotsSchedule(lisenceNumbers)
-        self.view.showQuerryResults(df)
+        self.view.showQueryResults(df)
         self.view.getUserInput("\nPress any button to continue...")
 
     # Add a new flight
@@ -227,7 +227,7 @@ class Controller:
         # Get the attribute value from the user. 
         attributeValue = self.view.getUserInput("Please type the value of the selected attribute\n")
         df = self.baseModel.retrieveTableDataByAttribute(table,attribute,attributeValue)
-        self.view.showQuerryResults(df)
+        self.view.showQueryResults(df)
         self.view.getUserInput("\nPress any button to continue...")
 
     # Update flight information
@@ -286,7 +286,7 @@ class Controller:
         # Get the attribute value from the user. 
         attributeValue = self.view.getUserInput("Please type the value of the selected attribute\n")
         df = self.baseModel.retrieveTableDataByAttribute(table,attribute,attributeValue)
-        self.view.showQuerryResults(df)
+        self.view.showQueryResults(df)
         self.view.getUserInput("\nPress any button to continue...")
 
     # Update destination (airport) information
@@ -317,25 +317,25 @@ class Controller:
     # Total Number of Passengers Flown by Each Aircraft"
     def _option13(self):
         df = self.baseModel.getTotalPassengerPerAircract()
-        self.view.showQuerryResults(df)
+        self.view.showQueryResults(df)
         self.view.getUserInput("\nPress any button to continue...")
    
     # Number of Flights Assigned to Each Pilot
     def _option14(self):
         df = self.baseModel.getNumFlightsPerPilot()
-        self.view.showQuerryResults(df)
+        self.view.showQueryResults(df)
         self.view.getUserInput("\nPress any button to continue...")
 
     # Number of Flights to Each Destination Airport
     def _option15(self):
         df = self.baseModel.getNumFlightsPerDestAirport()
-        self.view.showQuerryResults(df)
+        self.view.showQueryResults(df)
         self.view.getUserInput("\nPress any button to continue...")
 
     # Average Travel Distance per Pilot
     def _option16(self):
         df = self.baseModel.getAvgDistancePerPilot()
-        self.view.showQuerryResults(df)
+        self.view.showQueryResults(df)
         self.view.getUserInput("\nPress any button to continue...")
     
     # Boolean check to see if the process will continue  

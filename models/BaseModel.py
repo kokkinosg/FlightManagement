@@ -14,22 +14,22 @@ class BaseModel:
         self.dbConnection = dbConnection
         self.cursor = cursor
 
-    # Method which retrieves a dataframe with the results of the querry. You specify the table to get the data from, the attribute and its value. 
+    # Method which retrieves a dataframe with the results of the query. You specify the table to get the data from, the attribute and its value. 
     def retrieveTableDataByAttribute(self, tableName, attributeName, attributeValue):
         # Check the table is valid and the attribue exists in that table
         if self._isValidTable(tableName) and self._isValidAttribute(tableName, attributeName):
-            # Construct and execute the select querry
-            df = self._executeSelectQuerry(tableName, attributeName, attributeValue)
+            # Construct and execute the select query
+            df = self._executeSelectQuery(tableName, attributeName, attributeValue)
             return df
         else:
             return None 
         
     # Method to return all rows from a specified table
     def retrieveAllDataFromTable(self,tableName):
-        # If the table is valid, i.e. exists in database, carry out the querry
+        # If the table is valid, i.e. exists in database, carry out the query
         if self._isValidTable(tableName):
-            querry = f"SELECT * FROM {tableName}"
-            df = pd.read_sql_query(querry, self.dbConnection)
+            query = f"SELECT * FROM {tableName}"
+            df = pd.read_sql_query(query, self.dbConnection)
             return df
         else:
             print(f"{tableName} does not exist in the database.")
@@ -44,10 +44,10 @@ class BaseModel:
 
             # Check if enough parameters were provided 
             if len(attributeNames) == len(params):
-                # Construct the querry with the helper function 
-                querry = self._constructInsertQuerry(tableName,params,attributeNames)
-                # Execute the querry 
-                self._executeInsertQuerry(tableName, querry, params)
+                # Construct the query with the helper function 
+                query = self._constructInsertQuery(tableName,params,attributeNames)
+                # Execute the query 
+                self._executeInsertQuery(tableName, query, params)
             else:
                 print(f"{len(attributeNames)} values were expected but only {len(params)} values were provided")
         else:
@@ -57,8 +57,8 @@ class BaseModel:
     def deleteRowsFromTable(self, tableName, attributeName, attributeValue):
         # Check the table is valid and the attribue exists in that table
         if self._isValidTable(tableName) and self._isValidAttribute(tableName, attributeName):
-            # Construct and execute the delete querry. If it returns true, return true here
-            self._executeDeleteQuerry(tableName, attributeName, attributeValue)
+            # Construct and execute the delete query. If it returns true, return true here
+            self._executeDeleteQuery(tableName, attributeName, attributeValue)
         else:
             return None 
 
@@ -66,17 +66,17 @@ class BaseModel:
     def updateRowsFromTable(self, tableName, setAttributeName, setAttributeValue, whereAttributeName, whereAttributeValue):
         # Check the table is valid and the attribue exists in that table
         if self._isValidTable(tableName) and self._isValidAttribute(tableName, setAttributeName) and self._isValidAttribute(tableName, whereAttributeName):
-            # Construct and execute the delete querry. If it returns true, return true here
-            self._executeUpdateQuerry(tableName, setAttributeName, setAttributeValue, whereAttributeName, whereAttributeValue)
+            # Construct and execute the delete query. If it returns true, return true here
+            self._executeUpdateQuery(tableName, setAttributeName, setAttributeValue, whereAttributeName, whereAttributeValue)
         else:
             return None 
 
     # Function to get all column names / attributes from a table 
     def getTableAttributeNames(self, tableName):
-        # This is a META querry which will return the schema of the table, from which i will only extract the attribute names. 
-        querry = f"PRAGMA table_info({tableName})"
+        # This is a META query which will return the schema of the table, from which i will only extract the attribute names. 
+        query = f"PRAGMA table_info({tableName})"
         # df contains the schema of the table 
-        df = pd.read_sql_query(querry,self.dbConnection)
+        df = pd.read_sql_query(query,self.dbConnection)
         # Extract the column names in a new array
         attributeNames = []
         for column in df['name']:
@@ -85,10 +85,10 @@ class BaseModel:
     
     # Function to get all column data types
     def getTableAttributeDataTypes(self, tableName):
-        # This is a META querry which will return the schema of the table, from which i will only extract the attribute names. 
-        querry = f"PRAGMA table_info({tableName})"
+        # This is a META query which will return the schema of the table, from which i will only extract the attribute names. 
+        query = f"PRAGMA table_info({tableName})"
         # df contains the schema of the table 
-        df = pd.read_sql_query(querry,self.dbConnection)
+        df = pd.read_sql_query(query,self.dbConnection)
         # Extract the column data Types in a new array
         attributeDataTypes = []
         for column in df['type']:
@@ -114,25 +114,25 @@ class BaseModel:
     # Helper function to extract all values in a specified column/attribute
     def _getAllAttributeValues(self, tableName, attributeName):
         try:
-            # Construct a simple select querry to get all values in a specified column
-            querry = f"SELECT {attributeName} FROM {tableName}"
-            # Get the results from the querry to a dataframe
-            df = pd.read_sql_query(querry, self.dbConnection)
+            # Construct a simple select query to get all values in a specified column
+            query = f"SELECT {attributeName} FROM {tableName}"
+            # Get the results from the query to a dataframe
+            df = pd.read_sql_query(query, self.dbConnection)
             # extract all the values to a list
             column_values = df[attributeName].tolist()
             return column_values
         except Exception as e:
             print(f"Error at getAllAttributeValues: {e}")
 
-    # Helper function to execute the update querry
-    def _executeUpdateQuerry(self, tableName, setAttributeName, setAttributeValue, whereAttributeName, whereAttributeValue):
-        # Construct the parameterised querry
-        querry = f'''UPDATE {tableName} SET {setAttributeName} = ? WHERE {whereAttributeName} = ? '''
+    # Helper function to execute the update query
+    def _executeUpdateQuery(self, tableName, setAttributeName, setAttributeValue, whereAttributeName, whereAttributeValue):
+        # Construct the parameterised query
+        query = f'''UPDATE {tableName} SET {setAttributeName} = ? WHERE {whereAttributeName} = ? '''
 
         try:
-            self.cursor.execute(querry, (setAttributeValue,whereAttributeValue))
+            self.cursor.execute(query, (setAttributeValue,whereAttributeValue))
             self.dbConnection.commit()
-             # Use rowcount to see if actually any records would be affected by the querry
+             # Use rowcount to see if actually any records would be affected by the query
             if self.cursor.rowcount == 0:
                 print(f"No records found in '{tableName}' where {whereAttributeName} = {whereAttributeValue}. Nothing was updated.")
             else:
@@ -144,7 +144,7 @@ class BaseModel:
     # The license Numbers is an array of licence numbers. 
     def getMultiplePilotsSchedule(self, licenseNumbers):
 
-        querry = '''SELECT p.pilotID as "Pilot ID", p.pilotName AS Name, p.pilotSurname AS Surname, p.licenseNumber AS "Licence Number", dep.airportName AS "Current Location", arr.airportName AS "Flies to",
+        query = '''SELECT p.pilotID as "Pilot ID", p.pilotName AS Name, p.pilotSurname AS Surname, p.licenseNumber AS "Licence Number", dep.airportName AS "Current Location", arr.airportName AS "Flies to",
         f.departTime AS "Departure Time", f.arrivalTime AS "Arrival Time", a.airline 
         FROM pilot p
         LEFT JOIN flights f ON f.pilotID = p.pilotID
@@ -156,48 +156,48 @@ class BaseModel:
         if len(licenseNumbers) > 0:
             # Loop over every license number in hte arraylist. If no numbers are provided this code will not run and instead it will show all pilot's schedule. 
             placeholders = ', '.join(['?'] * len(licenseNumbers))
-            querry += f" WHERE p.licenseNumber IN ({placeholders})"
-            querry += " ORDER BY p.licenseNumber"
-            df = pd.read_sql_query(querry, self.dbConnection, params=licenseNumbers)
+            query += f" WHERE p.licenseNumber IN ({placeholders})"
+            query += " ORDER BY p.licenseNumber"
+            df = pd.read_sql_query(query, self.dbConnection, params=licenseNumbers)
         else:
-            # Conclude the querry by ordering by pilot license number
-            querry += " ORDER BY p.licenseNumber "
-            df = pd.read_sql_query(querry, self.dbConnection)
+            # Conclude the query by ordering by pilot license number
+            query += " ORDER BY p.licenseNumber "
+            df = pd.read_sql_query(query, self.dbConnection)
         
         return df
 
-    # Helper function to construct the insertion querry. The params are the values correspodning to the attributeNames
-    def _constructInsertQuerry(self, tableName, params, attributeNames):
+    # Helper function to construct the insertion query. The params are the values correspodning to the attributeNames
+    def _constructInsertQuery(self, tableName, params, attributeNames):
             # Create the approapraite number of placeholders in a string like "?,?,?..."
             placeholders = ', '.join(['?'] * len(params))
             # Create the appropriate attributes name string
             attributeNamesString = ', '.join(attributeNames)
-            # Construct the querry
-            querry = f"INSERT INTO {tableName} ({attributeNamesString}) VALUES ({placeholders})"
-            return querry
+            # Construct the query
+            query = f"INSERT INTO {tableName} ({attributeNamesString}) VALUES ({placeholders})"
+            return query
     
-    # Helper function to execute the insertion querry 
-    def _executeInsertQuerry(self,tableName, querry, params):
-        # Execute querry
+    # Helper function to execute the insertion query 
+    def _executeInsertQuery(self,tableName, query, params):
+        # Execute query
         try:
-            # Remember, we are using parameterised querry, so execute has a second argument. 
-            self.cursor.execute(querry, params)
+            # Remember, we are using parameterised query, so execute has a second argument. 
+            self.cursor.execute(query, params)
             self.dbConnection.commit()
             print(f"Row added to '{tableName}' successfully.")
         except Exception as e:
             print(f"Error adding row to '{tableName}': {e}")
 
-    # Helper function which creates and executes a delete querry by specifying the Table, the attribute from that table and the value of the attribute. 
+    # Helper function which creates and executes a delete query by specifying the Table, the attribute from that table and the value of the attribute. 
     # It returns true if succesful     
-    def _executeDeleteQuerry(self, tableName,attributeName,attributeValue):
+    def _executeDeleteQuery(self, tableName,attributeName,attributeValue):
         try: 
-            # Construct a parameterised querry to return all flights mathing the criterion
-            querry = f''' DELETE FROM {tableName} WHERE {attributeName} = ?'''
-            # We need the cursor execute this querry.
-            self.cursor.execute(querry, (attributeValue,))
+            # Construct a parameterised query to return all flights mathing the criterion
+            query = f''' DELETE FROM {tableName} WHERE {attributeName} = ?'''
+            # We need the cursor execute this query.
+            self.cursor.execute(query, (attributeValue,))
             self.dbConnection.commit()
 
-            # Use rowcount to see if actually any records would be affected by the querry
+            # Use rowcount to see if actually any records would be affected by the query
             if self.cursor.rowcount == 0:
                 print(f"No records found in '{tableName}' where {attributeName} = {attributeValue}. Nothing was deleted.")
             else:
@@ -205,20 +205,20 @@ class BaseModel:
         except Exception as e:
             print(f"Error encountered at _executeDeleteQuery: {e}")
 
-    # Helper function which creates and executes a select querry by specifying the Table, the attribute from that table and the value of the attribute.      
+    # Helper function which creates and executes a select query by specifying the Table, the attribute from that table and the value of the attribute.      
     # It returns a dataframe with the results
-    def _executeSelectQuerry(self, tableName,attributeName,attributeValue):
+    def _executeSelectQuery(self, tableName,attributeName,attributeValue):
         try: 
-            # Construct a parameterised querry to return all flights mathing the criterion
-            querry = f'''SELECT * FROM {tableName} WHERE {attributeName} = ?'''
+            # Construct a parameterised query to return all flights mathing the criterion
+            query = f'''SELECT * FROM {tableName} WHERE {attributeName} = ?'''
 
             # Get a dataframe with the results. 
-            df = pd.read_sql_query(querry,self.dbConnection, params =(attributeValue,))
+            df = pd.read_sql_query(query,self.dbConnection, params =(attributeValue,))
 
             # Return the data frame
             return df
         except Exception as e:
-            print(f"Error encountered at _executeSelectQuerry : {e}")
+            print(f"Error encountered at _executeSelectQuery : {e}")
             return None
 
     # Helper function which checks if the attribute name is valid for a specified table
@@ -256,11 +256,11 @@ class BaseModel:
     # Method to return the total number of passengers flown by a specific aircraft 
     def getTotalPassengerPerAircract(self):
         try: 
-            querry = '''SELECT a.model AS AircraftModel, a.airline, SUM(f.passengerCount) AS TotalPassengers
+            query = '''SELECT a.model AS AircraftModel, a.airline, SUM(f.passengerCount) AS TotalPassengers
                     FROM flights f
                     JOIN aircraft a ON f.aircraftID = a.aircraftID
                     GROUP BY f.aircraftID;'''
-            df = pd.read_sql_query(querry,self.dbConnection)
+            df = pd.read_sql_query(query,self.dbConnection)
             return df
         except Exception as e:
             print(f"Error encountered at getTotalPassengerPerAircract : {e}")
@@ -269,11 +269,11 @@ class BaseModel:
     # Method to return the number of Flights to each destination airport
     def getNumFlightsPerDestAirport(self):
         try:
-            querry = '''SELECT a.airportName AS Destination, COUNT(f.flightID) AS TotalFlights
+            query = '''SELECT a.airportName AS Destination, COUNT(f.flightID) AS TotalFlights
             FROM flights f
             JOIN airport a ON f.toDestinationID = a.airportID
             GROUP BY f.toDestinationID;'''
-            df = pd.read_sql_query(querry,self.dbConnection)
+            df = pd.read_sql_query(query,self.dbConnection)
             return df
         except Exception as e:
             print(f"Error encountered at getNumFlightsPerDestAirport : {e}")
@@ -283,11 +283,11 @@ class BaseModel:
     def getNumFlightsPerPilot(self):
         try:
             # Concatenate the name 
-            querry = '''SELECT p.pilotName || ' ' || p.pilotSurname AS Pilot, COUNT(f.flightID) AS TotalFlights
+            query = '''SELECT p.pilotName || ' ' || p.pilotSurname AS Pilot, COUNT(f.flightID) AS TotalFlights
             FROM flights f 
             JOIN pilot p ON f.pilotID = p.pilotID
             GROUP BY f.pilotID;'''
-            df = pd.read_sql_query(querry,self.dbConnection)
+            df = pd.read_sql_query(query,self.dbConnection)
             return df
         except Exception as e:
             print(f"Error encountered at getNumFlightsPerPilot : {e}")
@@ -297,11 +297,11 @@ class BaseModel:
     def getAvgDistancePerPilot(self):
         try:
             # Calculates the average travel distance of all flights flown by each pilot, groups the results by pilot and displays their full name with concatenation.
-            querry = '''SELECT p.pilotName || ' ' || p.pilotSurname AS Pilot, ROUND(AVG(f.travelDistanceKM), 2) AS AvgDistanceKM
+            query = '''SELECT p.pilotName || ' ' || p.pilotSurname AS Pilot, ROUND(AVG(f.travelDistanceKM), 2) AS AvgDistanceKM
             FROM flights f
             JOIN pilot p ON f.pilotID = p.pilotID
             GROUP BY f.pilotID;'''
-            df = pd.read_sql_query(querry,self.dbConnection)
+            df = pd.read_sql_query(query,self.dbConnection)
             return df
         except Exception as e:
             print(f"Error encountered at getNumFlightsPerPilot : {e}")

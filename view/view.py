@@ -35,7 +35,7 @@ class View:
         pass
 
     # Method which is called when we want to see results from a search
-    def showQuerryResults(self, df):
+    def showQueryResults(self, df):
         # We must check if it is None fdirst because if it is and we check for empty first, it will throw an error.  
         if df is None:
             print("Something went wrong — no DataFrame was returned.")
