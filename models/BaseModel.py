@@ -251,7 +251,7 @@ class BaseModel:
         else:
             return False
 
-    # Methods with specific querries 
+    # Methods with specific queries 
 
     # Method to return the total number of passengers flown by a specific aircraft 
     def getTotalPassengerPerAircract(self):

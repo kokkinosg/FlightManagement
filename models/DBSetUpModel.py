@@ -32,16 +32,16 @@ class DBSetUpModel:
         try:
             print("Adding sample data to the database...")
 
-            self._add_sample_data_to_table(self._create_raw_aircraft_data_querries())
+            self._add_sample_data_to_table(self._create_raw_aircraft_data_queries())
             print ("Sample aircraft data added successfully.")
 
-            self._add_sample_data_to_table(self._create_raw_flight_data_querries())
+            self._add_sample_data_to_table(self._create_raw_flight_data_queries())
             print ("Sample flight data added successfully.")
 
-            self._add_sample_data_to_table(self._create_raw_pilot_data_querries())
+            self._add_sample_data_to_table(self._create_raw_pilot_data_queries())
             print ("Sample pilot data added successfully.")
 
-            self._add_sample_data_to_table(self._create_raw_airport_data_querries())
+            self._add_sample_data_to_table(self._create_raw_airport_data_queries())
             print ("Sample airport data added successfully.")
 
             print("All sample data added succesfully!")
@@ -50,16 +50,16 @@ class DBSetUpModel:
 
     # Helper methods
     # This method creates all the necessary tables if they do not exist. It is called in the constructor. 
-    def _create_table(self, sqlQuery):
-        # Pass the table creation SQL querries to the cursor and execute them. 
-        self.cur.execute(sqlQuery)
+    def _create_table(self, query):
+        # Pass the table creation SQL queries to the cursor and execute them. 
+        self.cur.execute(query)
         # Commit the change
         self.dbConnection.commit()
         pass
 
     # SQL query to create the flights table
     def _create_flights_table_query(self):
-        sqlQuery = '''CREATE TABLE IF NOT EXISTS flights (
+        query = '''CREATE TABLE IF NOT EXISTS flights (
             flightID INTEGER PRIMARY KEY AUTOINCREMENT,
             aircraftID INTEGER NOT NULL,
             pilotID INTEGER NOT NULL,
@@ -75,22 +75,22 @@ class DBSetUpModel:
             FOREIGN KEY (fromDestinationID) REFERENCES airport(airportID),
             FOREIGN KEY (toDestinationID) REFERENCES airport(airportID)
             );'''
-        return sqlQuery
+        return query
     
     # SQL query to create the airport table
     def _create_airport_table_query(self):
-        sqlQuery = '''CREATE TABLE IF NOT EXISTS airport (
+        query = '''CREATE TABLE IF NOT EXISTS airport (
             airportID INTEGER PRIMARY KEY AUTOINCREMENT,
             airportName TEXT NOT NULL,
             city TEXT,
             country TEXT,
             postCode TEXT NOT NULL
             );'''
-        return sqlQuery
+        return query
     
     # SQL query to create the pilot table
     def _create_pilot_table_query(self):
-        sqlQuery = '''CREATE TABLE IF NOT EXISTS pilot (
+        query = '''CREATE TABLE IF NOT EXISTS pilot (
             pilotID INTEGER PRIMARY KEY AUTOINCREMENT,
             pilotName TEXT NOT NULL,
             pilotSurname TEXT NOT NULL,
@@ -102,11 +102,11 @@ class DBSetUpModel:
             FOREIGN KEY (aircraftID) REFERENCES aircraft(aircraftID),
             FOREIGN KEY (currentLocationID) REFERENCES airport(airportID)
             );'''
-        return sqlQuery
+        return query
     
     # SQL query to create the aircraft table
     def _create_aircraft_table_query(self):
-        sqlQuery ='''CREATE TABLE IF NOT EXISTS aircraft (
+        query ='''CREATE TABLE IF NOT EXISTS aircraft (
             aircraftID INTEGER PRIMARY KEY AUTOINCREMENT,
             model TEXT NOT NULL,
             airline TEXT NOT NULL,
@@ -116,18 +116,18 @@ class DBSetUpModel:
             currentLocationID INTEGER NOT NULL,
             FOREIGN KEY (currentLocationID) REFERENCES airport(airportID)
             );'''
-        return sqlQuery
+        return query
     
     # Add sample data to each table
-    def _add_sample_data_to_table(self, querriesArray):
-        for query in querriesArray:
+    def _add_sample_data_to_table(self, queriesArray):
+        for query in queriesArray:
                 self.cur.execute(query)
         self.dbConnection.commit()
         pass
 
-    # SQL querries to insert raw data
-    def _create_raw_flight_data_querries(self):
-        sqlQuerries = [
+    # SQL queries to insert raw data
+    def _create_raw_flight_data_queries(self):
+        queries = [
             '''INSERT OR IGNORE INTO flights (
                 flightID, aircraftID, pilotID, fromDestinationID, toDestinationID,
                 departTime, arrivalTime, passengerCount, travelDistanceKM, status
@@ -188,10 +188,10 @@ class DBSetUpModel:
             ) VALUES
             (10, 4, 5, 104, 102, '2025-06-10 19:45:00', '2025-06-10 22:10:00', 105, 865.7, 'Delayed');''',
         ]
-        return sqlQuerries
+        return queries
     
-    def _create_raw_pilot_data_querries(self):
-        sqlQuerries = [
+    def _create_raw_pilot_data_queries(self):
+        queries = [
             '''INSERT OR IGNORE INTO pilot (
                 pilotID, pilotName, pilotSurname, gender, licenseNumber,
                 experienceYears, aircraftID, currentLocationID
@@ -252,10 +252,10 @@ class DBSetUpModel:
             ) VALUES
             (10, 'Eva', 'Martinez', 'Female', 'LIC9012', 11, 5, 101);'''
         ]
-        return sqlQuerries
+        return queries
     
-    def _create_raw_aircraft_data_querries(self):
-        sqlQuerries = [
+    def _create_raw_aircraft_data_queries(self):
+        queries = [
             '''INSERT OR IGNORE INTO aircraft (
                 aircraftID, model, airline, manufacturer,
                 capacity, rangeKM, currentLocationID
@@ -316,10 +316,10 @@ class DBSetUpModel:
             ) VALUES
             (10, 'A380', 'Emirates', 'Airbus', 517, 15200.0, 101);'''
         ]
-        return sqlQuerries
+        return queries
     
-    def _create_raw_airport_data_querries(self):
-        sqlQuerries = [
+    def _create_raw_airport_data_queries(self):
+        queries = [
             '''INSERT OR IGNORE INTO airport (
                 airportID, airportName, city, country, postCode
             ) VALUES
@@ -370,6 +370,6 @@ class DBSetUpModel:
             ) VALUES
             (110, 'Dublin Airport', 'Dublin', 'Ireland', 'K67');'''
         ]
-        return sqlQuerries
+        return queries
     
 
