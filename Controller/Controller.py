@@ -148,7 +148,7 @@ class Controller:
     # Update existing record/s from any table - E.g. Assign a pilot to a flight
     def _option5(self):
         # Get the table from the user.
-        tableName = self.view.getUserInput("Please type the table containing the data to be deleted:")
+        tableName = self.view.getUserInput("Please type the table containing the data to be updated:")
         # Show all possible attributes for that table 
         self.view.showMessage(f"These are the table: {tableName} columns/attributes:")
         self.view.showMessage(self.baseModel.getTableAttributeNames(tableName))
