@@ -73,22 +73,22 @@ class Controller:
     # View flight/airport/aircraft/pilot information based on criteria.
     def _option1(self):
         # Get the table from the user.
-        table = self.view.getUserInput("Please type the table contianing the required data\n")
-        self.view.showMessage(f"These are the table: {table} columns/attributes\n")
+        table = self.view.getUserInput("Please type the table name containing the required data:")
+        self.view.showMessage(f"These are the table: {table} columns/attributess")
         # Show all possible attributes for that table 
         self.view.showMessage(self.baseModel.getTableAttributeNames(table))
         # Get the attribute from the user. 
-        attribute = self.view.getUserInput(" Please type the attribute which will narrow the search\n")
+        attribute = self.view.getUserInput("Please type the attribute which will narrow the search:")
         # Get the attribute value from the user. 
-        attributeValue = self.view.getUserInput("Please type the value of the selected attribute\n")
+        attributeValue = self.view.getUserInput("Please type the value of the selected attribute:")
         df = self.baseModel.retrieveTableDataByAttribute(table,attribute,attributeValue)
         self.view.showQueryResults(df)
-        self.view.getUserInput("\nPress any button to continue...")
+        self.view.getUserInput("Press any button to continue...")
     
     # View all records in the selected table - E.g. View all flights
     def _option2(self):
         # Get the table from the user.
-        table = self.view.getUserInput("Please type the table contianing the required data\n")
+        table = self.view.getUserInput("Please type the table name containing the required data:")
         # Get all rows from the table
         df = self.baseModel.retrieveAllDataFromTable(table)
         self.view.showQueryResults(df)
@@ -97,13 +97,13 @@ class Controller:
     # Add a new record to any table - E.g. Add a new flight
     def _option3(self):
         # Get the table from the user.
-        tableName = self.view.getUserInput("Please type the table containing the required data\n")
+        tableName = self.view.getUserInput("Please type the table name containing the required data:")
         # Get the attribute names for that table 
         attributeNames = self.baseModel.getTableAttributeNames(tableName)
         # Get the attribute data types from that table 
         attributeDataTypes = self.baseModel.getTableAttributeDataTypes(tableName)
         # Show the required attributes and their data types to the user. 
-        self.view.showMessage(f"To add a row to the {tableName} please provide the below attributes")
+        self.view.showMessage(f"To add a row to the {tableName} please provide the below attributes:")
         # Initialise an empty params list to contain the params 
         params = []
         # Initiate a counter 
@@ -124,16 +124,16 @@ class Controller:
     # Delete record/s from any table - E.g. Delete a flight
     def _option4(self):
         # Get the table from the user.
-        table = self.view.getUserInput("Please type the table containing the data to be deleted\n")
+        table = self.view.getUserInput("Please type the name of the table containing the data to be deleted:")
         self.view.showMessage(f"These are the table: {table} columns/attributes\n")
         # Show all possible attributes for that table 
         self.view.showMessage(self.baseModel.getTableAttributeNames(table))
         
         # Get the attribute from the user. 
-        attribute = self.view.getUserInput(" Please choose one of the above attributes to narrow down the search \n")
+        attribute = self.view.getUserInput("Please choose one of the above attributes to narrow down the search:")
 
         # Get the attribute value from the user. 
-        attributeValue = self.view.getUserInput("Please type the value of the selected attribute\n")
+        attributeValue = self.view.getUserInput("Please type the value of the selected attribute:")
 
         # Display warning 
         self.view.showMessage(f"You are about to delete all records from {table} where {attribute} = {attributeValue}")
@@ -148,18 +148,18 @@ class Controller:
     # Update existing record/s from any table - E.g. Assign a pilot to a flight
     def _option5(self):
         # Get the table from the user.
-        tableName = self.view.getUserInput("Please type the table containing the data to be deleted\n")
+        tableName = self.view.getUserInput("Please type the table containing the data to be deleted:")
         # Show all possible attributes for that table 
-        self.view.showMessage(f"These are the table: {tableName} columns/attributes\n")
+        self.view.showMessage(f"These are the table: {tableName} columns/attributes:")
         self.view.showMessage(self.baseModel.getTableAttributeNames(tableName))
         # Get the attribute from the user. 
-        whereAttributeName = self.view.getUserInput(" Please type the attribute which will narrow the search\n")
+        whereAttributeName = self.view.getUserInput(" Please type the attribute which will narrow the search:")
         # Get the attribute value from the user. 
-        whereAttributeValue = self.view.getUserInput("Please type the value of the selected attribute\n")
+        whereAttributeValue = self.view.getUserInput("Please type the value of the selected attribute:")
         # Get the attribute from the user. 
-        setAttributeName = self.view.getUserInput(" Please type the attribute whose value will be updated\n")
+        setAttributeName = self.view.getUserInput(" Please type the attribute whose value will be updated:")
         # Get the attribute value from the user. 
-        setAttributeValue = self.view.getUserInput("Please type the new value for the attribute\n")
+        setAttributeValue = self.view.getUserInput("Please type the new value for the attribute:")
 
         # Display warning 
         self.view.showMessage(f"You are about to update {setAttributeName} = {setAttributeValue} of all rows in {tableName} where {whereAttributeName} = {whereAttributeValue}")
@@ -177,12 +177,12 @@ class Controller:
         lisenceNumbers = []
 
         # Get the first license number 
-        lisenceNumber = self.view.getUserInput("Please type the first pilot's license number or press enter to display all pilots' schedule\n")
+        lisenceNumber = self.view.getUserInput("Please type the first pilot's license number or press enter to display all pilots' schedule:")
 
         # Get additional license Numbers until the user presses enter which will provide an empty string
         while lisenceNumber != "":
             lisenceNumbers.append(lisenceNumber)
-            lisenceNumber = self.view.getUserInput("Please type in another pilot's license number or press enter to diplay specified pilots' schedule\n")
+            lisenceNumber = self.view.getUserInput("Please type in another pilot's license number or press enter to diplay specified pilots' schedule:")
 
         df = self.baseModel.getMultiplePilotsSchedule(lisenceNumbers)
         self.view.showQueryResults(df)
@@ -197,7 +197,7 @@ class Controller:
         # Get the attribute data types from that table 
         attributeDataTypes = self.baseModel.getTableAttributeDataTypes(tableName)
         # Show the required attributes and their data types to the user. 
-        self.view.showMessage(f"To add a row to the {tableName} please provide the below attributes")
+        self.view.showMessage(f"To add a row to the {tableName} please provide values to the below attributes:")
         # Initialise an empty params list to contain the params 
         params = []
         # Initiate a counter 
@@ -219,13 +219,13 @@ class Controller:
     def _option8(self):
          # Get the table from the user.
         table = "flights"
-        self.view.showMessage(f"These are the table: {table} columns/attributes\n")
+        self.view.showMessage(f"These are the table: {table} columns/attributes:")
         # Show all possible attributes for that table 
         self.view.showMessage(self.baseModel.getTableAttributeNames(table))
         # Get the attribute from the user. 
-        attribute = self.view.getUserInput(" Please type the attribute which will narrow the search\n")
+        attribute = self.view.getUserInput(" Please type the attribute which will narrow the search:")
         # Get the attribute value from the user. 
-        attributeValue = self.view.getUserInput("Please type the value of the selected attribute\n")
+        attributeValue = self.view.getUserInput("Please type the value of the selected attribute:")
         df = self.baseModel.retrieveTableDataByAttribute(table,attribute,attributeValue)
         self.view.showQueryResults(df)
         self.view.getUserInput("\nPress any button to continue...")
@@ -235,16 +235,16 @@ class Controller:
         # Get the table from the user.
         tableName = "flights"
         # Show all possible attributes for that table 
-        self.view.showMessage(f"These are the table: {tableName} columns/attributes\n")
+        self.view.showMessage(f"These are the table: {tableName} columns/attributes:")
         self.view.showMessage(self.baseModel.getTableAttributeNames(tableName))
         # Get the attribute from the user. 
-        whereAttributeName = self.view.getUserInput(" Please type the attribute which will narrow the search\n")
+        whereAttributeName = self.view.getUserInput(" Please type the attribute which will narrow the search:")
         # Get the attribute value from the user. 
-        whereAttributeValue = self.view.getUserInput("Please type the value of the selected attribute\n")
+        whereAttributeValue = self.view.getUserInput("Please type the value of the selected attribute:")
         # Get the attribute from the user. 
-        setAttributeName = self.view.getUserInput(" Please type the attribute whose value will be updated\n")
+        setAttributeName = self.view.getUserInput(" Please type the attribute whose value will be updated:")
         # Get the attribute value from the user. 
-        setAttributeValue = self.view.getUserInput("Please type the new value for the attribute\n")
+        setAttributeValue = self.view.getUserInput("Please type the new value for the attribute:")
 
         # Display warning 
         self.view.showMessage(f"You are about to update {setAttributeName} = {setAttributeValue} of all rows in {tableName} where {whereAttributeName} = {whereAttributeValue}")
@@ -260,9 +260,9 @@ class Controller:
     def _option10(self):
         
         # Get the old pilot ID 
-        oldPilotID = self.view.getUserInput(" Please specify the pilotID which will be replaced for a specific flight\n")
+        oldPilotID = self.view.getUserInput(" Please specify the pilotID which will be replaced for a specific flight:")
         # Get the attribute value from the user. 
-        newPilotID = self.view.getUserInput("Please specify the new pilotID for that flight\n")
+        newPilotID = self.view.getUserInput("Please specify the new pilotID for that flight:")
     
         # Display warning 
         self.view.showMessage(f"You are about to update the pilotID of a flight from {oldPilotID} to {newPilotID}")
@@ -278,13 +278,13 @@ class Controller:
     def _option11(self):
          # Get the table from the user.
         table = "airport"
-        self.view.showMessage(f"These are the table: {table} columns/attributes\n")
+        self.view.showMessage(f"These are the table: {table} columns/attributes:")
         # Show all possible attributes for that table 
         self.view.showMessage(self.baseModel.getTableAttributeNames(table))
         # Get the attribute from the user. 
-        attribute = self.view.getUserInput(" Please type the attribute which will narrow the search\n")
+        attribute = self.view.getUserInput(" Please type the attribute which will narrow the search:")
         # Get the attribute value from the user. 
-        attributeValue = self.view.getUserInput("Please type the value of the selected attribute\n")
+        attributeValue = self.view.getUserInput("Please type the value of the selected attribute:")
         df = self.baseModel.retrieveTableDataByAttribute(table,attribute,attributeValue)
         self.view.showQueryResults(df)
         self.view.getUserInput("\nPress any button to continue...")
@@ -293,16 +293,16 @@ class Controller:
     def _option12(self):
         tableName = "airport"
         # Show all possible attributes for that table 
-        self.view.showMessage(f"These are the table: {tableName} columns/attributes\n")
+        self.view.showMessage(f"These are the table: {tableName} columns/attributes:")
         self.view.showMessage(self.baseModel.getTableAttributeNames(tableName))
         # Get the attribute from the user. 
-        whereAttributeName = self.view.getUserInput(" Please type the attribute which will narrow the search\n")
+        whereAttributeName = self.view.getUserInput(" Please type the attribute which will narrow the search:")
         # Get the attribute value from the user. 
-        whereAttributeValue = self.view.getUserInput("Please type the value of the selected attribute\n")
+        whereAttributeValue = self.view.getUserInput("Please type the value of the selected attribute:")
         # Get the attribute from the user. 
-        setAttributeName = self.view.getUserInput(" Please type the attribute whose value will be updated\n")
+        setAttributeName = self.view.getUserInput(" Please type the attribute whose value will be updated:")
         # Get the attribute value from the user. 
-        setAttributeValue = self.view.getUserInput("Please type the new value for the attribute\n")
+        setAttributeValue = self.view.getUserInput("Please type the new value for the attribute:")
 
         # Display warning 
         self.view.showMessage(f"You are about to update {setAttributeName} = {setAttributeValue} of all rows in {tableName} where {whereAttributeName} = {whereAttributeValue}")
