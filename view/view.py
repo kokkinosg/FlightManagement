@@ -11,8 +11,10 @@ class View:
         print("\n Menu:")
         print("**********")
         print(" Main Functions\n")
+        
+        print(" NOTE: PLEASE GO THROUGH OPTION 0 WHEN FIRST RUNNING THE CODE")  
+        print(" 0. Create flights, airport, pilot and aircraft tables and populate them with sample data\n")
 
-        print(" 0. Create flights, airport, pilot and aircraft tables and populate them with sample data")
         print(" 1. View flight/airport/aircraft/pilot information based on criteria")
         print(" 2. View all records in the selected table - E.g. View all flights")
         print(" 3. Add a new record to any table - E.g. Add a new flight")
